@@ -1,26 +1,28 @@
-#SwiftGG-App-接口规范
-------
+## SwiftGG-App-接口规范
+
 V0.1：by CMB，2015-12-15
 
 v0.2：by shanks，2015-12-20
 
-* 统一地址,使用mod和act作为后台接口的分发处理依据
 * 统一请求和返回的数据格式
 * 统一使用 POST请求
+* URL统一用domain/apiVersion/moduleName/methodName构成
+* 当前的apiVersion为v1
 
-###用户第三方登录（模块：登录）
+### ModuleName: user
+
+methodName: other_login
+
 使用场景：用户登录
 
 方式：POST
 
-地址：http://xxx.com/json.php
+地址：http://xxx.com/v1/user/other_login
 
 请求参数：
 
-```
+``` 
 {
-	"mod" : "user",
-	"act" : "loginFromThird",
 	"keyseri" : 第三方唯一标识(必填),
 	"type"    : 第三方类型("qq"|"github"|"weibo",必填)
 }
@@ -28,7 +30,7 @@ v0.2：by shanks，2015-12-20
 
 响应参数：
 
-```
+``` 
 {
 	"ret"  : 0,
 	"data" : {
@@ -41,7 +43,7 @@ v0.2：by shanks，2015-12-20
 
 错误情况：
 
-```
+``` 
 {
 	"ret"  : 错误码,
 	"errMsg" : 错误信息
@@ -49,19 +51,19 @@ v0.2：by shanks，2015-12-20
 ```
 
 
-###用户注册（模块：注册）
+
+methodName: user_register
+
 使用场景：用户注册
 
 方式：POST
 
-地址：http://xxx.com/json.php
+地址：http://xxx.com/v1/user/user_login
 
 请求参数：
 
-```
+``` 
 {
-	"mod" : "user",
-	"act" : "register",
 	"keyseri"   : 第三方唯一标识(必填)
 	"type"      : 第三方类型("qq"|"github"|"weibo",必填)
 	"nickname"  : 昵称(必填),
@@ -72,7 +74,7 @@ v0.2：by shanks，2015-12-20
 
 注册成功响应参数：
 
-```
+``` 
 {
 	"ret"  : 0,
 	"data" : {
@@ -84,7 +86,8 @@ v0.2：by shanks，2015-12-20
 ```
 
 错误情况：
-```
+
+``` 
 {
 	"ret"  : 错误码,
 	"errMsg" : 错误信息
@@ -92,7 +95,9 @@ v0.2：by shanks，2015-12-20
 ```
 
 
-###用户密码登录（模块：登录）
+
+### 用户密码登录（模块：登录）
+
 使用场景：用户登录
 
 方式：POST
@@ -101,7 +106,7 @@ v0.2：by shanks，2015-12-20
 
 请求参数：
 
-```
+``` 
 {
 	"mod" : "user",
 	"act" : "login",
@@ -112,7 +117,7 @@ v0.2：by shanks，2015-12-20
 
 响应参数：
 
-```
+``` 
 {
 	"ret"  : 0,
 	"data" : {
@@ -125,14 +130,15 @@ v0.2：by shanks，2015-12-20
 
 错误情况：
 
-```
+``` 
 {
 	"ret"  : 错误码,
 	"errMsg" : 错误信息
 }
 ```
 
-###获取用户信息
+### 获取用户信息
+
 使用场景：获取用户详细信息
 
 方式：POST
@@ -141,7 +147,7 @@ v0.2：by shanks，2015-12-20
 
 请求参数：
 
-```
+``` 
 {
 	"mod" : "user",
 	"act" : "getInfo",
@@ -151,7 +157,7 @@ v0.2：by shanks，2015-12-20
 
 响应参数：
 
-```
+``` 
 {
 	"ret"  : 0,
 	"data" : {
@@ -188,7 +194,8 @@ v0.2：by shanks，2015-12-20
 
 ---
 
-###获取分类列表（模块：分类）
+### 获取分类列表（模块：分类）
+
 使用场景：获取分类列表
 
 方式：POST
@@ -197,7 +204,7 @@ v0.2：by shanks，2015-12-20
 
 请求参数：
 
-```
+``` 
 {
 	"mod" : "user",
 	"act" : "getCategoryList",
@@ -206,7 +213,7 @@ v0.2：by shanks，2015-12-20
 
 响应参数：
 
-```
+``` 
 {
 	"ret" : 0,
 	"data : [
@@ -219,7 +226,8 @@ v0.2：by shanks，2015-12-20
 
 ---
 
-###获取分类的文章（模块：首页 | 分类）
+### 获取分类的文章（模块：首页 | 分类）
+
 使用场景：点击对应的分类显示文章列表
 
 方式：POST
@@ -228,16 +236,17 @@ v0.2：by shanks，2015-12-20
 
 请求参数：
 
-```
+``` 
 {
 	"mod" : "user",
 	"act" : "getArticlesByCategory",
 	"categoryId" : 分类id(如果不输入就按时间输出文章列表,可选)
 }
 ```
+
 响应参数：
 
-```
+``` 
 {
 	"ret"  : 0,
 	"data" : [
@@ -270,7 +279,8 @@ v0.2：by shanks，2015-12-20
 
 ---
 
-###获取文章信息（模块：首页 | 分类）
+### 获取文章信息（模块：首页 | 分类）
+
 使用场景：获取用户详细信息
 
 方式：POST
@@ -279,7 +289,7 @@ v0.2：by shanks，2015-12-20
 
 请求参数：
 
-```
+``` 
 {
 	"mod" : "user",
 	"act" : "getArticlesByCategory",
@@ -289,7 +299,7 @@ v0.2：by shanks，2015-12-20
 
 响应参数：
 
-```
+``` 
 {
 	"ret"  : 0,
 	"data" : {
@@ -317,4 +327,3 @@ v0.2：by shanks，2015-12-20
 	}
 }
 ```
-
