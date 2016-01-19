@@ -1,9 +1,9 @@
 <?php
-require 'flight/Flight.php';
+/**
+ * Demo Application
+ */
+require __DIR__."/bootstrap/init.php";
 
-Flight::route('/', function(){
-    echo 'Hello SwiftGG';
-});
-
+Flight::before("start", array("Controller", "init"));
 Flight::start();
-?>
+

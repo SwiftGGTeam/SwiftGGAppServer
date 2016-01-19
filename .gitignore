@@ -1,1 +1,4 @@
 .DS_Store
+.htaccess
+composer.lock
+vendor/

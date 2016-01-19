@@ -1,26 +1,36 @@
-#SwiftGG-App-接口规范
-------
-V0.1：by CMB，2015-12-15
+## SwiftGG-App-接口规范
+
+### 版本历史 
+```
+v0.3：by riven,shanks，2015-12-29
+
+* URL统一用domain/apiVersion/moduleName/methodName构成
+* 当前的apiVersion为v1
 
 v0.2：by shanks，2015-12-20
 
-* 统一地址,使用mod和act作为后台接口的分发处理依据
 * 统一请求和返回的数据格式
 * 统一使用 POST请求
 
-###用户第三方登录（模块：登录）
+V0.1：by CMB，2015-12-15
+
+```
+
+
+v0.4: 待定
+
+### ModuleName: user
+
+#### otherLogin
+
 使用场景：用户登录
 
-方式：POST
-
-地址：http://xxx.com/json.php
+地址：http://xxx.com/v1/user/otherLogin
 
 请求参数：
 
-```
+``` 
 {
-	"mod" : "user",
-	"act" : "loginFromThird",
 	"keyseri" : 第三方唯一标识(必填),
 	"type"    : 第三方类型("qq"|"github"|"weibo",必填)
 }
@@ -28,7 +38,7 @@ v0.2：by shanks，2015-12-20
 
 响应参数：
 
-```
+``` 
 {
 	"ret"  : 0,
 	"data" : {
@@ -41,7 +51,7 @@ v0.2：by shanks，2015-12-20
 
 错误情况：
 
-```
+``` 
 {
 	"ret"  : 错误码,
 	"errMsg" : 错误信息
@@ -49,19 +59,17 @@ v0.2：by shanks，2015-12-20
 ```
 
 
-###用户注册（模块：注册）
+
+#### userRegister
+
 使用场景：用户注册
 
-方式：POST
-
-地址：http://xxx.com/json.php
+地址：http://xxx.com/v1/user/userRegister
 
 请求参数：
 
-```
+``` 
 {
-	"mod" : "user",
-	"act" : "register",
 	"keyseri"   : 第三方唯一标识(必填)
 	"type"      : 第三方类型("qq"|"github"|"weibo",必填)
 	"nickname"  : 昵称(必填),
@@ -72,7 +80,7 @@ v0.2：by shanks，2015-12-20
 
 注册成功响应参数：
 
-```
+``` 
 {
 	"ret"  : 0,
 	"data" : {
@@ -84,7 +92,8 @@ v0.2：by shanks，2015-12-20
 ```
 
 错误情况：
-```
+
+``` 
 {
 	"ret"  : 错误码,
 	"errMsg" : 错误信息
@@ -92,19 +101,17 @@ v0.2：by shanks，2015-12-20
 ```
 
 
-###用户密码登录（模块：登录）
-使用场景：用户登录
 
-方式：POST
+#### userLogin
 
-地址：http://xxx.com/json.php
+使用场景：用户密码登录
+
+地址：http://xxx.com/v1/user/userLogin
 
 请求参数：
 
-```
+``` 
 {
-	"mod" : "user",
-	"act" : "login",
 	"userName" : 用户名,
 	"password" : 加密后的密码
 }
@@ -112,7 +119,7 @@ v0.2：by shanks，2015-12-20
 
 响应参数：
 
-```
+``` 
 {
 	"ret"  : 0,
 	"data" : {
@@ -125,33 +132,30 @@ v0.2：by shanks，2015-12-20
 
 错误情况：
 
-```
+``` 
 {
 	"ret"  : 错误码,
 	"errMsg" : 错误信息
 }
 ```
 
-###获取用户信息
+#### getInfo
+
 使用场景：获取用户详细信息
 
-方式：POST
-
-地址：http://xxx.com/json.php
+地址：http://xxx.com/v1/user/getInfo
 
 请求参数：
 
-```
+``` 
 {
-	"mod" : "user",
-	"act" : "getInfo",
 	"uid" : 用户id(必填)
 }
 ```
 
 响应参数：
 
-```
+``` 
 {
 	"ret"  : 0,
 	"data" : {
@@ -186,27 +190,27 @@ v0.2：by shanks，2015-12-20
 }
 ```
 
----
 
-###获取分类列表（模块：分类）
+### ModuleName: article
+
+
+#### getCategoryList
+
 使用场景：获取分类列表
 
-方式：POST
-
-地址：http://xxx.com/json.php
+地址：http://xxx.com/v1/article/getCategoryList
 
 请求参数：
 
-```
+``` 
 {
-	"mod" : "user",
-	"act" : "getCategoryList",
+
 }
 ```
 
 响应参数：
 
-```
+``` 
 {
 	"ret" : 0,
 	"data : [
@@ -219,25 +223,24 @@ v0.2：by shanks，2015-12-20
 
 ---
 
-###获取分类的文章（模块：首页 | 分类）
+#### getArticlesByCategory
+
 使用场景：点击对应的分类显示文章列表
 
-方式：POST
 
-地址：http://xxx.com/json.php
+地址：http://xxx.com/v1/article/getArticlesByCategory
 
 请求参数：
 
-```
+``` 
 {
-	"mod" : "user",
-	"act" : "getArticlesByCategory",
 	"categoryId" : 分类id(如果不输入就按时间输出文章列表,可选)
 }
 ```
+
 响应参数：
 
-```
+``` 
 {
 	"ret"  : 0,
 	"data" : [
@@ -270,26 +273,24 @@ v0.2：by shanks，2015-12-20
 
 ---
 
-###获取文章信息（模块：首页 | 分类）
-使用场景：获取用户详细信息
+#### getDetail
 
-方式：POST
+使用场景：获取文章详细信息
 
-地址：http://xxx.com/json.php
+
+地址：http://xxx.com/v1/article/getDetail
 
 请求参数：
 
-```
+``` 
 {
-	"mod" : "user",
-	"act" : "getArticlesByCategory",
 	"articleId" : 文章id(必填)
 }
 ```
 
 响应参数：
 
-```
+``` 
 {
 	"ret"  : 0,
 	"data" : {
@@ -317,4 +318,3 @@ v0.2：by shanks，2015-12-20
 	}
 }
 ```
-

@@ -1,0 +1,14 @@
+language: php
+
+before_script:
+  - composer self-update
+  - composer install --dev --prefer-source
+
+script:
+  - ./vendor/bin/phpcs --warning-severity=0 --standard=PSR2 src
+  - phpunit
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
