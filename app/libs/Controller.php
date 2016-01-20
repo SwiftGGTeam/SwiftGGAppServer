@@ -195,6 +195,7 @@ class Controller {
                 $class = "\\".trim(str_replace("/", "\\", $tmp[0]), "\\")."Controller";
                 $func = "@".$tmp[1];
                 $pattern = $route[0];
+
                 //echo "class:$class func:$func pattern:$pattern";die;
                 Flight::route($pattern, array($class, $func));
             }

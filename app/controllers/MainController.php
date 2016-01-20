@@ -1,5 +1,5 @@
 <?php
-// //namespace controllers;
+// namespace controllers;
 // use \Flight;
 // use \Controller;
 
@@ -9,7 +9,7 @@
 class MainController extends Controller {
 
     public function index() {       
-        echo "OK";die;
+        echo "Hello SwiftGG";
     }
 
 }
