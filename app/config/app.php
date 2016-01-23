@@ -15,14 +15,14 @@ return array(
     //路由配置
     "flight.routes" => array(
         // V1.0接口规范 路由规则
-        array("/v1/user/otherLogin"  , "User:otherLoginV1"),
+        array("/v1/user/otherLogin" , "User:otherLoginV1"),
         array("/v1/user/userRegister", "User:userRegisterV1"),
-        array("/v1/user/userLogin"   , "User:userLoginV1"),
-        array("/v1/user/getInfo"     , "User:getInfoV1"),
-        array("/v1/article/getCategoryList"       , "Article:getCategoryListV1"),
+        array("/v1/user/userLogin" , "User:userLoginV1"),
+        array("/v1/user/getInfo" , "User:getInfoV1"),
+        array("/v1/article/getCategoryList" , "Article:getCategoryListV1"),
         array("/v1/article/getArticlesByCategory" , "Article:getArticlesByCategoryV1"),
-        array("/v1/article/getDetail"             , "Article:getDetailV1"),
-        array("/v1/catch/"           , "Catch:index"),
+        array("/v1/article/getDetail" , "Article:getDetailV1"),
+        array("/v1/catch/" , "Catch:index"),
         // 其它规则
         array("*", "Main:index"),
     ), 

@@ -9,7 +9,7 @@ require_once (APPLIB_PATH.'libs/CatchArticle.php');
 class MainController extends Controller {
 
     public function index() {       
-		$article = new CatchArticle();
+
     }
 
 }

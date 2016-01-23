@@ -19,13 +19,24 @@ class SGArticleModel {
 	}
 
 	// 插入一条数据
-    public function insert($typeId, $tag, $title, $coverUrl, $contentUrl, $translator, $proofreader, $finalization, $author, $authorImage, $originalDate, $originalUrl, $clickedNumber = 0) {
-    	$currentTime = time();
-        $field  = "type_id,tag,title,cover_url,content_url,translator,proofreader,finalization,author,author_image,original_date,original_url,clicked_number,created_time,updated_time";
-        $value  = "$typeId,$tag,$title,$coverUrl,$contentUrl,$translator,$proofreader,$finalization,$author,$authorImage,$originalDate,$originalUrl,$clickedNumber,$currentTime,$currentTime";
-        Flight::connectMysqlDB();
+    public function insert($dataArray) {
+    	// 连接数据库	
+    	Flight::connectMysqlDB();
+    	$field = "";
+        $value = "";
+        if( !is_array($dataArray) || count($dataArray) <= 0) {
+            $this->halt('没有要插入的数据');
+            return false;
+        }
+        while(list($key,$val) = each($dataArray)) {
+            $field .="$key,";
+            $value .="'$val',";
+        }
+        $field  = substr( $field,0,-1);
+        $value  = substr( $value,0,-1);       
         $sql    = "insert into $this->tableName($field) values($value)";
         $result = mysql_query($sql);
+        // 关闭数据库
         Flight::closeMysqlDB();
         if(!$result) 
         	return false;
