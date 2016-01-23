@@ -1,6 +1,6 @@
 <?php
 //宏定义
-define('SWIFTGGAPPLIB_PATH', "/SwiftGGAppServer/app/");
+define('APPLIB_PATH', $_SERVER['DOCUMENT_ROOT'] . "/SwiftGGAppServer/app/");
 define('LOG_ROOT', "/SwiftGGAppServer/app/logs/");
 
 //路径：  /usr/share/nginx/html/SwiftGGAppServer/
@@ -22,6 +22,7 @@ return array(
         array("/v1/article/getCategoryList"       , "Article:getCategoryListV1"),
         array("/v1/article/getArticlesByCategory" , "Article:getArticlesByCategoryV1"),
         array("/v1/article/getDetail"             , "Article:getDetailV1"),
+        array("/v1/catch/"           , "Catch:index"),
         // 其它规则
         array("*", "Main:index"),
     ), 
@@ -29,9 +30,9 @@ return array(
     //mysql配置
     "db.host" => "localhost",
     "db.port" => 3306,
-    "db.user" => "",
+    "db.user" => "root",
     "db.pass" => "",
-    "db.name" => "",
+    "db.name" => "swiftggapp",
     "db.charset" => "utf8",
     
     //"cache.path" => dirname(__DIR__)."/storage/cache",

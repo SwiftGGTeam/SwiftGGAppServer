@@ -767,6 +767,7 @@ abstract class NetUtil
 		curl_setopt($curl_handle, CURLOPT_HTTPHEADER, $header);
 		// 指定请求地址
 		curl_setopt($curl_handle, CURLOPT_URL, $url);
+
 		// 执行请求
 		$response = curl_exec($curl_handle);
 
@@ -825,6 +826,7 @@ abstract class NetUtil
 		curl_setopt($curl_handle, CURLOPT_POST, TRUE);
 		//post 参数
 		curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $post_data);
+
 		// 执行请求
 		$response = curl_exec($curl_handle);
 		if ( $response === false ) {
@@ -833,6 +835,67 @@ abstract class NetUtil
 			// 关闭连接
 			curl_close($curl_handle);
 
+			return false;
+		}
+
+		// 关闭连接
+		curl_close($curl_handle);
+
+		return $response;
+	}
+
+	/**
+	 * 使用 cURL 实现 HTTPS GET 请求
+	 *
+	 * @param		string			$url, 请求地址
+	 * @param		string			$host, 服务器 host 名, 默认为空(当一台机器有多个虚拟主机时需要指定 host)
+	 * @param		int				$timeout, 连接超时时间, 默认为2
+	 *
+	 * @return		sting/bool		$data, 为返回数据, 失败返回 false
+	 */
+	public static function cURLHTTPSGet($url, $timeout = 30, $host = '') {
+		self::clearError();
+
+		$header = array('Content-transfer-encoding: text');
+
+		if ( !empty($host) ) {
+			$header[] = 'Host: ' . $host;
+		}
+
+		$curl_handle = curl_init();
+
+		// 连接超时
+		curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, $timeout);
+		// 执行超时
+		curl_setopt($curl_handle, CURLOPT_TIMEOUT, 30);
+		// HTTP返回错误时, 函数直接返回错误
+		curl_setopt($curl_handle, CURLOPT_FAILONERROR, true);
+		// 允许重定向
+		curl_setopt($curl_handle, CURLOPT_FOLLOWLOCATION, true);
+		// 允许重定向的最大次数
+		curl_setopt($curl_handle, CURLOPT_MAXREDIRS, 5);
+		// 返回为字符串
+		curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
+		// 设置HTTP头
+		curl_setopt($curl_handle, CURLOPT_HTTPHEADER, $header);
+		// 指定请求地址
+		curl_setopt($curl_handle, CURLOPT_URL, $url);
+
+		curl_setopt($curl_handle, CURLOPT_SSL_VERIFYHOST, 2);
+		curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, false);
+
+		curl_setopt($curl_handle, CURLOPT_USERAGENT,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:43.0) Gecko/20100101 Firefox/43.0"); 
+
+
+		// 执行请求
+		$response = curl_exec($curl_handle);
+
+		if ( $response === false ) {
+			self::$errCode = 10615;
+			self::$errMsg = 'cURL errno: ' . curl_errno($curl_handle) . '; error: ' . curl_error($curl_handle);
+			// 关闭连接
+			curl_close($curl_handle);
+			echo self::$errMsg;die;
 			return false;
 		}
 

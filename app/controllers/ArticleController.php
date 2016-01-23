@@ -5,6 +5,8 @@
 
 // require_once (SWIFTGGAPPLIB_PATH.'libs/ILog.php');
 // require_once (SWIFTGGAPPLIB_PATH.'libs/ToolUtil.php');
+// require_once (SWIFTGGAPPLIB_PATH.'libs/NetUtil.php');
+
 
 class ArticleController extends Controller {
 

@@ -19,7 +19,7 @@ class Controller {
         }
         $_REQUEST = array_merge($_GET, $_POST, $_COOKIE);
 
-        //Flight::map("db", array(__CLASS__, "db"));
+        Flight::map("db", array(__CLASS__, "db"));
         //Flight::map("cache", array(__CLASS__, "cache"));
         Flight::map("log", array(__CLASS__, "log"));
         Flight::map("curl", array(__CLASS__, "curl"));
@@ -29,6 +29,9 @@ class Controller {
         Flight::map("controller", array(__CLASS__, "getController"));
         Flight::map("model", array(__CLASS__, "getModel"));
         Flight::map("url", array(__CLASS__, "url"));
+
+        Flight::map("connectMysqlDB", array(__CLASS__, "connectMysqlDB"));
+        Flight::map("closeMysqlDB", array(__CLASS__, "closeMysqlDB"));
 
         Flight::map("connectMongoDB", array(__CLASS__, "connectMongoDB"));
         Flight::map("closeMongoDB", array(__CLASS__, "closeMongoDB"));
@@ -50,7 +53,7 @@ class Controller {
     }
     
     //连接mysql，已经不再需要，后面要去掉
-    /*public static function db($name = "db") {
+    public static function db($name = "db") {
         if(!isset(self::$_dbInstances[$name])) {
             $db_host = Flight::get("$name.host");
             $db_port = Flight::get("$name.port");
@@ -83,7 +86,7 @@ class Controller {
                 $db_charset = "utf8";
             }
 
-            $db = new medoo(array(
+            $db = array(
                 "database_type" => "mysql",
                 "database_name" => $db_name,
                 "server" => $db_host,
@@ -91,13 +94,13 @@ class Controller {
                 "username" => $db_user,
                 "password" => $db_pass,
                 "charset" => $db_charset
-            ));
+            );
 
             self::$_dbInstances[$name] = $db;
         }
 
         return self::$_dbInstances[$name];
-    }*/
+    }
 
     /*public static function cache($path = "data") {
         $path = Flight::get("cache.path")."/$path";
@@ -230,7 +233,7 @@ class Controller {
     //连接mongoDB数据库,直接返回已经选择了frontiers数据库的对象
     public static function connectMongoDB() {
         
-        $mongo_server = Flight::get("mongo.server");
+        $mongo_server   = Flight::get("mongo.server");
         $mongo_username = Flight::get("mongo.username");
         $mongo_password = Flight::get("mongo.password");
         $mongo_database = Flight::get("mongo.database");
@@ -241,6 +244,7 @@ class Controller {
         
         return $gameDB;
     }
+
     //关闭数据库连接
     public static function closeMongoDB()
     {
@@ -259,6 +263,20 @@ class Controller {
         $redisInstance->pconnect($redis_server, $redis_port);
 
         return $redisInstance;
+    }
+
+    // 连接数据库
+    public static function connectMysqlDB(){
+        $db = Flight::db();
+        $mysqlDB = mysql_connect($db['server'],$db['username'],$db['password']);
+        mysql_select_db($db['database_name'], $mysqlDB);
+        return $mysqlDB;
+    }
+    
+    //关闭数据库连接
+    public static function closeMysqlDB(){
+        $mysqlDB = Flight::connectMysqlDB();
+        mysql_close($mysqlDB);
     }
 }
 
