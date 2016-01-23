@@ -1,7 +1,6 @@
 <?php
 /**
  * 封装一些常用的网络操作函数
- * @author 付学宝
  */
 abstract class NetUtil
 {
@@ -884,7 +883,7 @@ abstract class NetUtil
 		curl_setopt($curl_handle, CURLOPT_SSL_VERIFYHOST, 2);
 		curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, false);
 
-		curl_setopt($curl_handle, CURLOPT_USERAGENT,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:43.0) Gecko/20100101 Firefox/43.0"); 
+		curl_setopt($curl_handle, CURLOPT_USERAGENT,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:43.0) Gecko/20100101 Firefox/43.0");
 
 
 		// 执行请求

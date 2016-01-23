@@ -1,18 +1,18 @@
 <?php
 
-require_once (WEEDOLIB_PATH."config/module.inc.php");
-require_once (WEEDOLIB_PATH.'config/errorCode.inc.php');
-require_once (WEEDOLIB_PATH.'libs/ILog.php');
+require_once ("config/module.inc.php");
+require_once ('config/errorCode.inc.php');
+require_once ('libs/ILog.php');
 
 class moduleTool
 {
-	public static $errCode = 0;	
+	public static $errCode = 0;
 	public static $errMsg = 0;
 	public static $restart = 1;
 
 	static function checkPostParameter($functionName)
 	{
-		$functionModAct = split('_', $functionName);	
+		$functionModAct = split('_', $functionName);
 		$functionPars[] = "ver";
 		$functionPars[] = "appId";
 		$functionPars[] = "appVer";
@@ -51,7 +51,7 @@ class moduleTool
 			if($functionPar != "tk" && $functionPar != "userId")
 			{
 				$par[$functionPar] = $postParameter[$functionPar];
-				$keys[] = $functionPar;		
+				$keys[] = $functionPar;
 			}
 
 			if ($functionPar == 'ts') {
@@ -61,7 +61,7 @@ class moduleTool
 		//accessToken参数兼容
 		if (isset($postParameter['accessToken'])) {
 			$par['accessToken'] = $postParameter['accessToken'];
-			$keys[] = 'accessToken';		
+			$keys[] = 'accessToken';
 		}
 		//commonLogin参数兼容
 		if ($postParameter['act'] == 'commonLogin') {
@@ -103,7 +103,7 @@ class moduleTool
 		$svrToken = Config::getToken($temp);
 		//ILog::writeTimeLog($par);
 		//exit();
-		if ($clientToken != $svrToken) 
+		if ($clientToken != $svrToken)
 		{
 			self::$errCode = GAME_ERR_ENCRYPTION;
 			self::$errMsg = "token array";
@@ -116,7 +116,7 @@ class moduleTool
 		}
 
 	}
- 
+
 }
 
 

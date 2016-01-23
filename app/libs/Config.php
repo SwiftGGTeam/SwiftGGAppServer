@@ -1,10 +1,7 @@
 <?php
 /**
  * 处理整个项目中的配置文件信息
- *
- * @author ericfu, hickwu
- * @version 1.0
- * @created 18-六月-2008 17:32:31
+
  */
 
 class Config
@@ -199,7 +196,7 @@ class Config
 		if (isset(self::$DBResMap[$key])){
 			return self::$DBResMap[$key];
 		}
-		
+
 		// 判断参数
 		if (!isset(self::$DBCfg[$key])){
 			self::$errCode = 20000;
@@ -347,8 +344,8 @@ class Config
 		self::$TTC2ResMap[$key] = $ttc;
 		return 	self::$TTC2ResMap[$key];
 	}
-	
-	
+
+
 	/**
 	 * 得到token值
 	 *
@@ -362,7 +359,7 @@ class Config
 		{
 			$strResouce .= $value;
 		}
-		
+
 		$strResouce .= WEEDO_MD5_KEY;
 		//var_dump($strResouce);
 		return md5($strResouce);
