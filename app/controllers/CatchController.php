@@ -9,17 +9,21 @@ class CatchController extends Controller {
 
     public function index() { 
     	$articleOpr = Flight::model(INTERFACE_SGAERTICLE);
-		// 请求文章列表
-		$articleListResponse = json_decode($this->catchArticleList());
-		if($articleListResponse == '') die;
-		foreach ($articleListResponse as $key => $value) {
-			$value = (array)$value;
-			// 请求文章信息
-			$articleDetailsResponse = json_decode($this->catchArticleProperty($value['name']));
-			ToolUtil::p($articleDetailsResponse) . '<br>';
-			sleep(200);
+    	$dir        = $_SERVER['DOCUMENT_ROOT'] . "/GGHexo/src/";
+    	// 搜索目录下所有的文件和文件夹
+		$rt         = ToolUtil::deepScanDir($dir);
+		// 遍历读取所有文件
+		foreach ($rt['file'] as $key => $value) {
+			// 判断是否为 md 文件
+			if(ToolUtil::getExtension($value) == 'md'){
+				$content = ToolUtil::readFile($value);
+				if($content){
+					$title = preg_match('/\"(.*)\"',$content);
+					echo $title;
+				}
+			}
 		}
-		echo 'OK';
+
     }
 
     // 获取文章列表

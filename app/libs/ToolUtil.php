@@ -38,6 +38,62 @@ class ToolUtil
 	    }else
 	        return $output;
 	}
+
+	/**
+	 * 取得输入目录所包含的所有目录和文件
+	 * 以关联数组形式返回
+	 */
+	public static function deepScanDir($dir)
+	{
+	    $fileArr = array();
+	    $dirArr = array();
+	    $dir = rtrim($dir, '//');
+	    if(is_dir($dir)){
+	        $dirHandle = opendir($dir);
+	        while(false !== ($fileName = readdir($dirHandle))){
+	            $subFile = $dir . DIRECTORY_SEPARATOR . $fileName;
+	            if(is_file($subFile)){
+	                $fileArr[] = $subFile;
+	            } elseif (is_dir($subFile) && str_replace('.', '', $fileName)!=''){
+	                $dirArr[] = $subFile;
+	                $arr = deepScanDir($subFile);
+	                $dirArr = array_merge($dirArr, $arr['dir']);
+	                $fileArr = array_merge($fileArr, $arr['file']);
+	            }
+	        }
+	        closedir($dirHandle);
+	    }
+	    return array('dir'=>$dirArr, 'file'=>$fileArr);
+	}
+
+	/**
+	 * 获取文件扩展名
+	 */
+	public static function getExtension($file)
+	{
+		return substr(strrchr($file, '.'), 1);
+	}
+
+	/**
+	 * 读取文件内容
+	 */
+	public static function readFile($file_path){
+		if(file_exists($file_path)){ 
+			if($fp=fopen($file_path,"a+")){ 
+				//读取文件 
+				$conn=fread($fp,filesize($file_path)); 
+				// //替换字符串 
+				// $conn=str_replace("rn","<br/>",$conn); 
+				// echo $conn."<br/>"; 
+			}else{ 
+				return false; 
+			} 
+		}else{ 
+			return false;
+		} 
+		return $conn;
+	}
+	
 }
 
 
