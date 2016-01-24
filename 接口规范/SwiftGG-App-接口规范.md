@@ -2,6 +2,10 @@
 
 ### 版本历史 
 ```
+V0.4：by CMB，2016-01-24
+
+* 增加用户注册接口，修改了第三方注册接口
+
 v0.3：by riven,shanks，2015-12-29
 
 * URL统一用domain/apiVersion/moduleName/methodName构成
@@ -17,13 +21,51 @@ V0.1：by CMB，2015-12-15
 ```
 
 
-v0.4: 待定
+v0.5: 待定
 
 ### ModuleName: user
 
+#### userLogin
+
+使用场景：用户密码登录
+
+地址：http://xxx.com/v1/user/userLogin
+
+请求参数：
+
+``` 
+{
+	"userName" : 用户名,
+	"password" : 加密后的密码
+}
+```
+
+响应参数：
+
+``` 
+{
+	"ret"  : 0,
+	"data" : {
+		"userId": 1,
+		用户其他信息，待定
+	}
+	"errMsg" : ""
+}
+```
+
+错误情况：
+
+``` 
+{
+	"ret"  : 错误码,
+	"errMsg" : 错误信息
+}
+```
+
+
 #### otherLogin
 
-使用场景：用户登录
+使用场景：用户第三方登录
 
 地址：http://xxx.com/v1/user/otherLogin
 
@@ -58,8 +100,6 @@ v0.4: 待定
 }
 ```
 
-
-
 #### userRegister
 
 使用场景：用户注册
@@ -70,11 +110,8 @@ v0.4: 待定
 
 ``` 
 {
-	"keyseri"   : 第三方唯一标识(必填)
-	"type"      : 第三方类型("qq"|"github"|"weibo",必填)
-	"nickname"  : 昵称(必填),
-	"signatre"  : 个性签名(可选),
-	"sex"       : 性别0为男1为女("0"|"1",可选)
+	"userName" : 用户名,
+	"password" : 加密后的密码
 }
 ```
 
@@ -101,23 +138,25 @@ v0.4: 待定
 ```
 
 
+#### userOtherRegister
 
-#### userLogin
+使用场景：用户第三方注册
 
-使用场景：用户密码登录
-
-地址：http://xxx.com/v1/user/userLogin
+地址：http://xxx.com/v1/user/userOtherRegister
 
 请求参数：
 
 ``` 
 {
-	"userName" : 用户名,
-	"password" : 加密后的密码
+	"keyseri"   : 第三方唯一标识(必填)
+	"type"      : 第三方类型("qq"|"github"|"weibo",必填)
+	"nickname"  : 昵称(必填),
+	"signatre"  : 个性签名(可选),
+	"sex"       : 性别0为男1为女("0"|"1",可选)
 }
 ```
 
-响应参数：
+注册成功响应参数：
 
 ``` 
 {

@@ -17,9 +17,32 @@ class CatchController extends Controller {
 			// 判断是否为 md 文件
 			if(ToolUtil::getExtension($value) == 'md'){
 				$content = ToolUtil::readFile($value);
+				$matches = array();
+				$data = array();
 				if($content){
-					$title = preg_match('/\"(.*)\"',$content);
-					echo $title;
+					// 解析标题
+					preg_match('/title: ([\s\S]+?)[\s\S*?]date/',$content,$matches);
+					$title = $matches[1];
+					// 解析日期
+					preg_match('/date: ([\s\S]+?)[\s\S*?]tags/' ,$content,$matches);
+					$date  = $matches[1];
+					// 解析标签
+					preg_match('/tags: \[([\s\S]+?)\][\s\S*?]categories/' ,$content,$matches);
+					$tags  = $matches;
+					// 解析分类
+					preg_match('/categories: ([\s\S]+?)[\s\S*?]permalink/' ,$content,$matches);
+					$categories = $matches;
+					// 解析固定链接
+					preg_match('/permalink: ([\s\S]+?)[\s\S*?]---/' ,$content,$matches);
+					$permalink = $matches[1];
+					$data = array(
+						'title'      => $title,
+						'date'       => $date,
+						'tags'       => $tags,
+						'categories' => $categories,
+						'permalink'  => $permalink
+					);
+					var_dump($data);
 				}
 			}
 		}

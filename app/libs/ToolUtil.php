@@ -9,7 +9,7 @@ class ToolUtil
    		return ((float)$usec + (float)$sec);
 	}
 
-		// 查看数组
+	// 查看数组
 	public static function p($array){
     	ToolUtil::dump($array,1,'<pre>',0);
 	}
