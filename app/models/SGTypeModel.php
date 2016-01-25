@@ -2,12 +2,12 @@
 
 require_once (APPLIB_PATH.'config/app.inc.php');
 
-class SGArticleModel {
+class SGTypeModel {
 
 	public $errCode = 0;
 	public $errMsg  = '';
 
-	public $tableName = 'sg_article';
+	public $tableName = 'sg_type';
 
 	public function __construct()
 	{
@@ -18,37 +18,38 @@ class SGArticleModel {
 		
 	}
 
-	// 插入一条数据
+	// 插入一条数据，返回id
     public function insert($dataArray) {
     	// 连接数据库	
     	Flight::connectMysqlDB();
     	$field = "";
         $value = "";
+
         if( !is_array($dataArray) || count($dataArray) <= 0) {
             $this->halt('没有要插入的数据');
             return false;
         }
         while(list($key,$val) = each($dataArray)) {
-            $field .="$key,";
-            $value .="'$val',";
+            $field .= "$key,";
+            $value .= "'$val',";
         }
         $field  = substr( $field,0,-1);
         $value  = substr( $value,0,-1);       
         $sql    = "insert into $this->tableName($field) values($value)";
-        $result = mysql_query($sql) or die('sql语句执行失败，错误信息是：' . mysql_error());
+        $result = mysql_query($sql);
         $id     = mysql_insert_id();
         // 关闭数据库
         Flight::closeMysqlDB();
         if(!$result) 
-            return false;
+        	return false;
         return $id;
     }
 
 	// 获取一条记录
-	public function get_one_by_typeId($typeId) {
+	public function get_one_by_id($id) {
 		Flight::connectMysqlDB();
-        $query  =  "SELECT * FROM " . $this->tableName . " WHERE typeId = " . $typeId;
-        $result =  mysql_query($query) or die('sql语句执行失败，错误信息是：' . mysql_error());
+        $query  = "SELECT * FROM " . $this->tableName . " WHERE id = " . $id;
+        $result = mysql_query($query);
         $rt     =& mysql_fetch_array($result);
         Flight::closeMysqlDB();
         return $rt;
@@ -58,7 +59,7 @@ class SGArticleModel {
 	public function get_all(){
 		Flight::connectMysqlDB();
 		$query  = "SELECT * FROM " . $this->tableName;
-		$result = mysql_query($query) or die('sql语句执行失败，错误信息是：' . mysql_error());
+		$result = mysql_query($query);
 		$rt     = array();
 		$i      = 0;
 		while($row = mysql_fetch_array($result))
@@ -70,25 +71,24 @@ class SGArticleModel {
 		return $rt;
 	}
 
-    // 获取最新文章的提交时间
-    public function get_last_update_date(){
-        Flight::connectMysqlDB();
-        $query  =  "SELECT * FROM " . $this->tableName . " order by updated_time DESC";
-        $result =  mysql_query($query) or die('sql语句执行失败，错误信息是：' . mysql_error());
-        $rt     =& mysql_fetch_array($result);
-        Flight::closeMysqlDB();
-        return $rt['updated_time'];
-    }
-
-    // 查看库中是否存在该名字的一项
-    public function judge_title($title){
-        $data = $this->get_all();
-        foreach ($data as $key => $value) {
-            if($value['title'] == $title){
-                return true;
+    // 查询在数据库中是否含有该分类（名称），如没有就执行插入
+    // @return id
+    public function get_id_by_name($name){
+        $articleTypeData = $this->get_all();
+        foreach ($articleTypeData as $key => $value) {
+            // 找到该项，返回id
+            if($value['name'] == $name || str_replace(' ','',$value['name']) == str_replace(' ','',$name)){
+                return $value['id'];
             }
         }
-        return false;
+        // 封装数据
+        $data = array(
+            'name'         => trim($name),
+            //'cover_url'    => $cover_url,
+            'created_time' => time(),
+            'updated_time' => time()
+        );
+        return $this->insert($data);
     }
 
 }

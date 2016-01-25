@@ -270,6 +270,7 @@ class Controller {
         $db = Flight::db();
         $mysqlDB = mysql_connect($db['server'],$db['username'],$db['password']);
         mysql_select_db($db['database_name'], $mysqlDB);
+        mysql_query("set names 'utf8'");
         return $mysqlDB;
     }
     

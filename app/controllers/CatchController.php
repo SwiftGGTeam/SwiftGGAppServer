@@ -8,17 +8,19 @@ require_once (APPLIB_PATH.'libs/ToolUtil.php');
 class CatchController extends Controller {
 
     public function index() { 
-    	$articleOpr = Flight::model(INTERFACE_SGAERTICLE);
+    	$articleOpr = Flight::model(INTERFACE_SGARTICLE);
+    	$typeOpr    = Flight::model(INTERFACE_SGTYPE);
+    	$articleTypeOpr = Flight::model(INTERFACE_SGARTICLETYPE);
     	$dir        = $_SERVER['DOCUMENT_ROOT'] . "/GGHexo/src/";
     	// 搜索目录下所有的文件和文件夹
 		$rt         = ToolUtil::deepScanDir($dir);
-		// 遍历读取所有文件
+		// 遍历所有 md 文件的内容
 		foreach ($rt['file'] as $key => $value) {
 			// 判断是否为 md 文件
 			if(ToolUtil::getExtension($value) == 'md'){
 				$content = ToolUtil::readFile($value);
 				$matches = array();
-				$data = array();
+				$data    = array();
 				if($content){
 					// 解析标题
 					preg_match('/title: ([\s\S]+?)[\s\S*?]date/',$content,$matches);
@@ -27,14 +29,19 @@ class CatchController extends Controller {
 						// 去掉双引号
 						$title = str_replace('"','',$title); 
 						// 去掉换行
-						$title = str_replace("\n",'',$title); 
+						$title = str_replace("\n",'',$title);
+						// 去掉前后空格
+						$title = trim($title);
+						if($articleOpr->judge_title($title)){
+							break;
+						}
 					}
 					// 解析日期
 					preg_match('/date: ([\s\S]+?)[\s\S*?]tags/' ,$content,$matches);
 					if($matches != NULL) {
 						$date = $matches[1];
 						// 去掉换行
-						$date = str_replace("\n",'',$date); 
+						$date = str_replace("\n",'',$date);
 					}
 					// 解析标签
 					preg_match('/tags: \[([\s\S]+?)\][\s\S*?]categories/' ,$content,$matches);
@@ -48,7 +55,12 @@ class CatchController extends Controller {
 					if($matches != NULL) {
 						$categories = $matches[1];
 						// 去掉换行
-						$categories = str_replace("\n",'',$categories); 
+						$categories = str_replace("\n",'',$categories);
+						$categories = explode(",",$categories);
+						$typeId     = array();
+						foreach ($categories as $key => $value) {
+							$typeId[$key] = $typeOpr->get_id_by_name($value);
+						}
 					}
 					// 解析固定链接
 					preg_match('/permalink: ([\s\S]+?)[\s\S*?]---/' ,$content,$matches);
@@ -60,9 +72,9 @@ class CatchController extends Controller {
 					// 解析原文链接
 					preg_match('/原文链接=([\s\S]+?)[\s\S*?]作者=/' ,$content,$matches);
 					if($matches != NULL) {
-						$original_url = $matches[1];
+						$originalUrl = $matches[1];
 						// 去掉换行
-						$original_url = str_replace("\n",'',$original_url); 
+						$originalUrl = str_replace("\n",'',$originalUrl); 
 					}
 					// 解析作者
 					preg_match('/作者=([\s\S]+?)[\s\S*?]原文日期=/' ,$content,$matches);
@@ -74,9 +86,9 @@ class CatchController extends Controller {
 					// 解析原文日期
 					preg_match('/原文日期=([\s\S]+?)[\s\S*?]译者=/' ,$content,$matches);
 					if($matches != NULL) {
-						$orginal_date = $matches[1];
+						$originalDate = $matches[1];
 						// 去掉换行
-						$orginal_date = str_replace("\n",'',$orginal_date); 
+						$originalDate = str_replace("\n",'',$originalDate); 
 					}
 					// 解析译者
 					preg_match('/译者=([\s\S]+?)[\s\S*?]校对=/' ,$content,$matches);
@@ -93,31 +105,44 @@ class CatchController extends Controller {
 						$proofreader = str_replace("\n",'',$proofreader); 
 					}
 					// 解析定稿
-					preg_match('/定稿=([\s\S]+?)[\s\S*?]\n/' ,$content,$matches);
+					preg_match('/定稿=([\s\S]+?)\n/' ,$content,$matches);
 					if($matches != NULL) {
 						$finalization = $matches[1];
 						// 去掉换行
 						$finalization = str_replace("\n",'',$finalization); 
 					}
-
-					$data = array(
-						'title'        => $title,
-						'date'         => $date,
-						'tags'         => $tags,
-						'categories'   => $categories,
-						'permalink'    => $permalink,
-						'original_url' => $original_url,
-						'author'       => $author,
-						'orginal_date' => $orginal_date,
-						'translator'   => $translator,
-						'proofreader'  => $proofreader,
-						'finalization' => $finalization
+					$coverUrl    = $dir . 'default_cover_url.png';
+					$authorImage = $dir . 'default_author_image.png';
+					// 数据封装
+					$articleData = array(
+						'tag'            => $tags,
+						'title'          => $title,
+						'cover_url'      => $coverUrl,
+						'content_url'    => $dir . $permalink,
+						'translator'     => $translator,
+						'proofreader'    => $proofreader,
+						'finalization'   => $finalization,
+						'author'         => $author,
+						'author_image'   => $authorImage,
+						'original_date'  => $originalDate,
+						'original_url'   => $originalUrl,
+						'permalink'      => $permalink,
+						'clicked_number' => 0,
+						'created_time'   => time(),
+						'updated_time'   => strtotime($date)
 					);
-					ToolUtil::p($data);
+					ToolUtil::p($articleData);
+					$articleId = $articleOpr->insert($articleData);
+					foreach ($typeId as $key => $value) {
+						$articleTypeData = array(
+							'article_id' => $articleId,
+							'type_id'    => $value,
+						);
+						$articleTypeOpr->insert($articleTypeData);
+					}
 				}
 			}
 		}
-
     }
 
     // 获取文章列表

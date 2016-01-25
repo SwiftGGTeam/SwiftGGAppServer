@@ -1,17 +1,16 @@
 /*文章分类*/
-CREATE TABLE IF NOT EXISTS `sg_article_type`(
+CREATE TABLE IF NOT EXISTS `sg_type`(
 	`id`            int(11)       NOT NULL AUTO_INCREMENT COMMENT '主键ID',
 	`name`          varchar(60)   NOT NULL COMMENT '分类名称',
-	`cover_url`     varchar(2048) NOT NULL COMMENT '分类对应的图片',
+	`cover_url`     varchar(2048) NULL     COMMENT '分类对应的图片',
   	`created_time`  int(11)       NOT NULL COMMENT '创建时间',
   	`updated_time`  int(11)       NOT NULL COMMENT '更新时间',
   	PRIMARY KEY (`id`)
-)ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='文章分类';
+)ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='分类';
 
 /*文章*/
 CREATE TABLE IF NOT EXISTS `sg_article`(
 	`id`             int(11)       NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-	`type_id`        int(11)       NOT NULL COMMENT '分类ID,外键',
 	`tag`            varchar(2048) NULL     COMMENT '标签，使用JSON',
 	`title`          varchar(100)  NOT NULL COMMENT '题目',
 	`cover_url`      varchar(2048) NULL     COMMENT '封面图片URL',
@@ -23,14 +22,22 @@ CREATE TABLE IF NOT EXISTS `sg_article`(
 	`author_image`   varchar(2048) NULL     COMMENT '文章作者头像',
 	`original_date`  varchar(100)  NULL     COMMENT '原文日期',
 	`original_url`   varchar(2048) NULL     COMMENT '原文链接',
+	`permalink`      varchar(2048) NOT NULL COMMENT '固定链接',
 	`clicked_number` int(11)       DEFAULT '0' COMMENT '点击数',
   	`created_time`   int(11)       NOT NULL COMMENT '创建时间',
   	`updated_time`   int(11)       NOT NULL COMMENT '更新时间',
   	PRIMARY KEY (`id`),
-  	FOREIGN KEY (`type_id`)  REFERENCES `sg_article_type` (`id`),
   	KEY `title`   (`title`),
   	KEY `author`  (`author`)
 )ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='文章';
+
+/*文章分类中间表*/
+CREATE TABLE IF NOT EXISTS `sg_article_type`(
+	`article_id` int(11)    NOT NULL COMMENT '文章ID,外键',
+	`type_id`    int(11)    NOT NULL COMMENT '分类ID,外键',
+	FOREIGN KEY (`article_id`) REFERENCES `sg_article` (`id`),
+	FOREIGN KEY (`type_id`)    REFERENCES `sg_type` (`id`)
+)ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='文章分类中间表';
 
 /*用户*/
 CREATE TABLE IF NOT EXISTS `sg_user`(
