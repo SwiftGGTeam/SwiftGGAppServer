@@ -70,6 +70,17 @@ class SGArticleModel {
 		return $rt;
 	}
 
+    // 获取一条记录通过id
+    public function get_one_by_id($id) {
+        Flight::connectMysqlDB();
+        $query  =  "SELECT * FROM " . $this->tableName . " WHERE id = " . $id;
+        $result =  mysql_query($query) or die('sql语句执行失败，错误信息是：' . mysql_error());
+        $rt     =& mysql_fetch_array($result);
+        Flight::closeMysqlDB();
+        return $rt;
+    }
+
+
     // 获取最新文章的提交时间
     public function get_last_update_date(){
         Flight::connectMysqlDB();

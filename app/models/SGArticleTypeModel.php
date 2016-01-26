@@ -61,6 +61,36 @@ class SGArticleTypeModel {
 		return $rt;
 	}
 
+    public function get_all_by_typeId($typeId){
+        Flight::connectMysqlDB();
+        $query  = "SELECT * FROM " . $this->tableName . " WHERE type_id = " . $typeId;
+        $result = mysql_query($query) or die('sql语句执行失败，错误信息是：' . mysql_error());;
+        $rt     = array();
+        $i      = 0;
+        while($row = mysql_fetch_array($result))
+        {
+            $rt[$i]=$row;
+            $i++;
+        }
+        Flight::closeMysqlDB();
+        return $rt;
+    }
+
+    public function get_all_by_artcileId($artcileId){
+        Flight::connectMysqlDB();
+        $query  = "SELECT * FROM " . $this->tableName . " WHERE article_id = " . $artcileId;
+        $result = mysql_query($query) or die('sql语句执行失败，错误信息是：' . mysql_error());;
+        $rt     = array();
+        $i      = 0;
+        while($row = mysql_fetch_array($result))
+        {
+            $rt[$i]=$row;
+            $i++;
+        }
+        Flight::closeMysqlDB();
+        return $rt;
+    }
+
     // 获取计算总数
     public function get_sum_clickednumber($name){
         Flight::connectMysqlDB();

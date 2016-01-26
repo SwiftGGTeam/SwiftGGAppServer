@@ -118,7 +118,7 @@ class CatchController extends Controller {
 						'tag'            => $tags,
 						'title'          => $title,
 						'cover_url'      => "",
-						'content_url'    => $articlerelativeDir . $permalink,
+						'content_url'    => "",//$articlerelativeDir . $permalink,
 						'translator'     => $translator,
 						'proofreader'    => $proofreader,
 						'finalization'   => $finalization,
@@ -127,6 +127,7 @@ class CatchController extends Controller {
 						'original_date'  => $originalDate,
 						'original_url'   => $originalUrl,
 						'permalink'      => $permalink,
+						'stars_number'   => 0,
 						'clicked_number' => 0,
 						'created_time'   => time(),
 						'updated_time'   => strtotime($date)

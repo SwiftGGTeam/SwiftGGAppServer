@@ -42,7 +42,8 @@ class ArticleController extends Controller {
     		$list = array(
     			'id'       => $value['id'],
     			'name'     => $value['name'],
-    			'coverUrl' => $value['cover_url'],
+    			//'coverUrl' => $value['cover_url'],
+    			'coverUrl' => 'http://i8.tietuku.com/1a055c782b5a4c37.png',
     			'sum'      => $value['sum']
     		);
     		$data[$key] = $list;
@@ -51,18 +52,54 @@ class ArticleController extends Controller {
     		'ret'  => 0,
     		'data' => $data
     	);
-    	//echo $response;
     	return $this->ajaxReturn($response);
     }
 
     // v1版 对应分类的文章
     public function getArticlesByCategoryV1(){
-    	echo 'ArticleController:getArticlesByCategoryV1';
+    	if(empty($_POST['categoryId'])){
+    		// 为空则输出所有文章
+    		$articleList = $this->articleOpr->get_all();
+    	}else{
+    		// 按照分类id输出
+    		$arrayId = $this->articleTypeOpr->get_all_by_typeId($_POST['categoryId']);
+    		foreach ($arrayId as $key => $value) {
+    			$articleList[$key] = $this->articleOpr->get_one_by_id($value['type_id']);
+    		}
+    	}
+    	// 封装数据
+    	foreach ($articleList as $key => $value) {
+			$list = array(
+				'id'             => $value['id'],
+				// 'coverUrl'       => $value['cover_url'],
+				'coverUrl'       => 'http://i8.tietuku.com/1a055c782b5a4c37.png',
+				// 'authorImageUrl' => $value['author_image'],
+				'authorImageUrl' => 'http://i8.tietuku.com/1a055c782b5a4c37.png',
+				'submitData'     => date('Y-m-d H:i:s' , $value['updated_time']),
+				'title'          => $value['title'],
+				'articleUrl'     => "http://swift.gg/" . date('Y/m/d',$value['updated_time']) . '/' .$value['permalink'],//$value['content_url'],
+				'translator'     => $value['translator'],
+				'starsNumber'    => $value['stars_number'],
+				'commentsNumber' => rand(0,80)
+			);
+			$data[$key] = $list;
+		}
+		// 封装数据
+    	$response = array(
+    		'ret'  => 0,
+    		'data' => $data
+    	);
+    	return $this->ajaxReturn($response);
     }
 
     // v1版 文章详情
     public function getDetailV1(){
-    	echo 'ArticleController:getDetailV1';
+		// 封装数据
+    	$response = array(
+    		'ret'    => -1,
+    		'errMsg' => '接口已废除',
+    	);
+    	return $this->ajaxReturn($response);
     }
 
 }

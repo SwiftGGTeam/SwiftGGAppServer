@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS `sg_article`(
 	`original_date`  varchar(100)  NULL     COMMENT '原文日期',
 	`original_url`   varchar(2048) NULL     COMMENT '原文链接',
 	`permalink`      varchar(2048) NOT NULL COMMENT '固定链接',
+	`stars_number`   int(11)       DEFAULT '0' COMMENT '点赞数',
 	`clicked_number` int(11)       DEFAULT '0' COMMENT '点击数',
   	`created_time`   int(11)       NOT NULL COMMENT '创建时间',
   	`updated_time`   int(11)       NOT NULL COMMENT '更新时间',
