@@ -61,6 +61,22 @@ class SGArticleTypeModel {
 		return $rt;
 	}
 
+    // 获取计算总数
+    public function get_sum_clickednumber($name){
+        Flight::connectMysqlDB();
+        $query = "SELECT $name,count(*) AS sum FROM $this->tableName group BY $name";
+        $result = mysql_query($query);
+        $rt     = array();
+        $i      = 0;
+        while($row = mysql_fetch_array($result))
+        {
+            $rt[$i]=$row;
+            $i++;
+        }
+        Flight::closeMysqlDB();
+        return $rt;
+    }
+
 }
 
 ?>

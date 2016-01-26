@@ -10,10 +10,11 @@ class CatchController extends Controller {
     public function index() { 
     	$articleOpr = Flight::model(INTERFACE_SGARTICLE);
     	$typeOpr    = Flight::model(INTERFACE_SGTYPE);
-    	$articleTypeOpr = Flight::model(INTERFACE_SGARTICLETYPE);
-    	$dir        = $_SERVER['DOCUMENT_ROOT'] . "/GGHexo/src/";
+    	$articleTypeOpr     = Flight::model(INTERFACE_SGARTICLETYPE);
+    	$articleAbsoluteDir = $_SERVER['DOCUMENT_ROOT'] . "/GGHexo/src/";
+    	$articlerelativeDir = "/GGHexo/src/";
     	// 搜索目录下所有的文件和文件夹
-		$rt         = ToolUtil::deepScanDir($dir);
+		$rt         = ToolUtil::deepScanDir($articleAbsoluteDir);
 		// 遍历所有 md 文件的内容
 		foreach ($rt['file'] as $key => $value) {
 			// 判断是否为 md 文件
@@ -32,6 +33,7 @@ class CatchController extends Controller {
 						$title = str_replace("\n",'',$title);
 						// 去掉前后空格
 						$title = trim($title);
+						// 判断数据库中是否存在该名称
 						if($articleOpr->judge_title($title)){
 							break;
 						}
@@ -111,19 +113,17 @@ class CatchController extends Controller {
 						// 去掉换行
 						$finalization = str_replace("\n",'',$finalization); 
 					}
-					$coverUrl    = $dir . 'default_cover_url.png';
-					$authorImage = $dir . 'default_author_image.png';
 					// 数据封装
 					$articleData = array(
 						'tag'            => $tags,
 						'title'          => $title,
-						'cover_url'      => $coverUrl,
-						'content_url'    => $dir . $permalink,
+						'cover_url'      => "",
+						'content_url'    => $articlerelativeDir . $permalink,
 						'translator'     => $translator,
 						'proofreader'    => $proofreader,
 						'finalization'   => $finalization,
 						'author'         => $author,
-						'author_image'   => $authorImage,
+						'author_image'   => "",
 						'original_date'  => $originalDate,
 						'original_url'   => $originalUrl,
 						'permalink'      => $permalink,
@@ -131,7 +131,6 @@ class CatchController extends Controller {
 						'created_time'   => time(),
 						'updated_time'   => strtotime($date)
 					);
-					ToolUtil::p($articleData);
 					$articleId = $articleOpr->insert($articleData);
 					foreach ($typeId as $key => $value) {
 						$articleTypeData = array(

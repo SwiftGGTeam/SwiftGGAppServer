@@ -11,6 +11,7 @@ return array(
     "flight.models.path" => dirname(__DIR__)."/models",
     //"flight.views.path" => dirname(__DIR__)."/views",
     "flight.libs.path" => dirname(__DIR__)."/libs",
+    // "flight.uploads.path" => 
 
     //路由配置
     "flight.routes" => array(

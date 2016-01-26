@@ -84,7 +84,7 @@ class SGTypeModel {
         // 封装数据
         $data = array(
             'name'         => trim($name),
-            //'cover_url'    => $cover_url,
+            'cover_url'    => "",
             'created_time' => time(),
             'updated_time' => time()
         );
