@@ -11,7 +11,8 @@ class CatchController extends Controller {
     	$articleOpr = Flight::model(INTERFACE_SGARTICLE);
     	$typeOpr    = Flight::model(INTERFACE_SGTYPE);
     	$articleTypeOpr     = Flight::model(INTERFACE_SGARTICLETYPE);
-    	$articleAbsoluteDir = $_SERVER['DOCUMENT_ROOT'] . "/GGHexo/src/";
+    	#$articleAbsoluteDir = $_SERVER['DOCUMENT_ROOT'] . "/GGHexo/src/";
+    	$articleAbsoluteDir = "/usr/share/nginx/html/GGHexo/src/";
     	$articlerelativeDir = "/GGHexo/src/";
     	// 搜索目录下所有的文件和文件夹
 		$rt         = ToolUtil::deepScanDir($articleAbsoluteDir);
@@ -21,11 +22,13 @@ class CatchController extends Controller {
 			if(ToolUtil::getExtension($value) == 'md'){
 				$content = ToolUtil::readFile($value);
 				$matches = array();
-				$data    = array();
+				$data    = array(); 
+				$articleHandleNumber = 0;
+				$typeHandleNumber    = 0;
 				if($content){
 					// 解析标题
 					preg_match('/title: ([\s\S]+?)[\s\S*?]date/',$content,$matches);
-					if($matches != NULL) {
+					if(!empty($matches[1])) {
 						$title = $matches[1];
 						// 去掉双引号
 						$title = str_replace('"','',$title); 
@@ -36,25 +39,33 @@ class CatchController extends Controller {
 						// 判断数据库中是否存在该名称
 						if($articleOpr->judge_title($title)){
 							break;
+						}else{
+							$articleHandleNumber++;
 						}
+					}else{
+						$title = "";
 					}
 					// 解析日期
 					preg_match('/date: ([\s\S]+?)[\s\S*?]tags/' ,$content,$matches);
-					if($matches != NULL) {
+					if(!empty($matches[1])) {
 						$date = $matches[1];
 						// 去掉换行
 						$date = str_replace("\n",'',$date);
+					}else{
+						$date = "";
 					}
 					// 解析标签
 					preg_match('/tags: \[([\s\S]+?)\][\s\S*?]categories/' ,$content,$matches);
-					if($matches != NULL) {
+					if(!empty($matches[1])) {
 						$tags = $matches[1];
 						// 去掉换行
 						$tags = str_replace("\n",'',$tags); 
-					}	
+					}else{
+						$tags = "";
+					}
 					// 解析分类
 					preg_match('/categories: \[([\s\S]+?)\][\s\S*?]permalink/' ,$content,$matches);
-					if($matches != NULL) {
+					if(!empty($matches[1])) {
 						$categories = $matches[1];
 						// 去掉换行
 						$categories = str_replace("\n",'',$categories);
@@ -63,55 +74,71 @@ class CatchController extends Controller {
 						foreach ($categories as $key => $value) {
 							$typeId[$key] = $typeOpr->get_id_by_name($value);
 						}
+					}else{
+						$categories = "";
 					}
 					// 解析固定链接
 					preg_match('/permalink: ([\s\S]+?)[\s\S*?]---/' ,$content,$matches);
-					if($matches != NULL) {
+					if(!empty($matches[1])) {
 						$permalink = $matches[1];
 						// 去掉换行
 						$permalink = str_replace("\n",'',$permalink); 
+					}else{
+						$permalink = "";
 					}
 					// 解析原文链接
 					preg_match('/原文链接=([\s\S]+?)[\s\S*?]作者=/' ,$content,$matches);
-					if($matches != NULL) {
+					if(!empty($matches[1])) {
 						$originalUrl = $matches[1];
 						// 去掉换行
 						$originalUrl = str_replace("\n",'',$originalUrl); 
+					}else{
+						$originalUrl = "";
 					}
 					// 解析作者
 					preg_match('/作者=([\s\S]+?)[\s\S*?]原文日期=/' ,$content,$matches);
-					if($matches != NULL) {
+					if(!empty($matches[1])) {
 						$author = $matches[1];
 						// 去掉换行
 						$author = str_replace("\n",'',$author); 
+					}else{
+						$author = "";
 					}
 					// 解析原文日期
 					preg_match('/原文日期=([\s\S]+?)[\s\S*?]译者=/' ,$content,$matches);
-					if($matches != NULL) {
+					if(!empty($matches[1])) {
 						$originalDate = $matches[1];
 						// 去掉换行
 						$originalDate = str_replace("\n",'',$originalDate); 
+					}else{
+						$originalDate = "";
 					}
 					// 解析译者
 					preg_match('/译者=([\s\S]+?)[\s\S*?]校对=/' ,$content,$matches);
-					if($matches != NULL) {
+					if(!empty($matches[1])) {
 						$translator = $matches[1];
 						// 去掉换行
 						$translator = str_replace("\n",'',$translator); 
+					}else{
+						$translator = "";
 					}
 					// 解析校对
 					preg_match('/校对=([\s\S]+?)[\s\S*?]定稿=/' ,$content,$matches);
-					if($matches != NULL) {
+					if(!empty($matches[1])) {
 						$proofreader = $matches[1];
 						// 去掉换行
 						$proofreader = str_replace("\n",'',$proofreader); 
+					}else{
+						$proofreader = "";
 					}
 					// 解析定稿
 					preg_match('/定稿=([\s\S]+?)\n/' ,$content,$matches);
-					if($matches != NULL) {
+					if(!empty($matches[1])) {
 						$finalization = $matches[1];
 						// 去掉换行
 						$finalization = str_replace("\n",'',$finalization); 
+					}else{
+						$finalization = "";
 					}
 					// 数据封装
 					$articleData = array(
@@ -133,6 +160,7 @@ class CatchController extends Controller {
 						'updated_time'   => strtotime($date)
 					);
 					$articleId = $articleOpr->insert($articleData);
+					$typeHandleNumber += COUNT($articleId);
 					foreach ($typeId as $key => $value) {
 						$articleTypeData = array(
 							'article_id' => $articleId,
@@ -143,6 +171,7 @@ class CatchController extends Controller {
 				}
 			}
 		}
+		echo '一共添加了 ' . $typeHandleNumber . ' 个分类, ' . $articleHandleNumber . ' 篇文章';
     }
 
     // 获取文章列表
