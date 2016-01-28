@@ -45,7 +45,7 @@ class UserController extends Controller {
                     'the_third_type' => 'no',
                     'the_third_keyseri' => 'no',
                     'image_url' => '',
-                    'socre' => 0,
+                    'score' => 0,
                     'created_time' => time(),
                     'updated_time' => time()     
                 );
