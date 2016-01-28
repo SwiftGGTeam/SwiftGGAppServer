@@ -36,7 +36,7 @@ class SGArticleTypeModel {
         $field  = substr( $field,0,-1);
         $value  = substr( $value,0,-1);       
         $sql    = "insert into $this->tableName($field) values($value)";
-        $result = mysql_query($sql);
+        $result = mysql_query($sql) or die('sql语句执行失败，错误信息是：' . mysql_error());
         $id     = mysql_insert_id();
         // 关闭数据库
         Flight::closeMysqlDB();
@@ -49,7 +49,7 @@ class SGArticleTypeModel {
 	public function get_all(){
 		Flight::connectMysqlDB();
 		$query  = "SELECT * FROM " . $this->tableName;
-		$result = mysql_query($query);
+		$result = mysql_query($query) or die('sql语句执行失败，错误信息是：' . mysql_error());
 		$rt     = array();
 		$i      = 0;
 		while($row = mysql_fetch_array($result))
@@ -64,7 +64,7 @@ class SGArticleTypeModel {
     public function get_all_by_typeId($typeId){
         Flight::connectMysqlDB();
         $query  = "SELECT * FROM " . $this->tableName . " WHERE type_id = " . $typeId;
-        $result = mysql_query($query) or die('sql语句执行失败，错误信息是：' . mysql_error());;
+        $result = mysql_query($query) or die('sql语句执行失败，错误信息是：' . mysql_error());
         $rt     = array();
         $i      = 0;
         while($row = mysql_fetch_array($result))
@@ -79,7 +79,7 @@ class SGArticleTypeModel {
     public function get_all_by_artcileId($artcileId){
         Flight::connectMysqlDB();
         $query  = "SELECT * FROM " . $this->tableName . " WHERE article_id = " . $artcileId;
-        $result = mysql_query($query) or die('sql语句执行失败，错误信息是：' . mysql_error());;
+        $result = mysql_query($query) or die('sql语句执行失败，错误信息是：' . mysql_error());
         $rt     = array();
         $i      = 0;
         while($row = mysql_fetch_array($result))
@@ -95,7 +95,7 @@ class SGArticleTypeModel {
     public function get_sum_clickednumber($name){
         Flight::connectMysqlDB();
         $query = "SELECT $name,count(*) AS sum FROM $this->tableName group BY $name";
-        $result = mysql_query($query);
+        $result = mysql_query($query) or die('sql语句执行失败，错误信息是：' . mysql_error());
         $rt     = array();
         $i      = 0;
         while($row = mysql_fetch_array($result))

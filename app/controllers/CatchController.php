@@ -11,8 +11,8 @@ class CatchController extends Controller {
     	$articleOpr = Flight::model(INTERFACE_SGARTICLE);
     	$typeOpr    = Flight::model(INTERFACE_SGTYPE);
     	$articleTypeOpr     = Flight::model(INTERFACE_SGARTICLETYPE);
-    	#$articleAbsoluteDir = $_SERVER['DOCUMENT_ROOT'] . "/GGHexo/src/";
-    	$articleAbsoluteDir = "/usr/share/nginx/html/GGHexo/src/";
+    	$articleAbsoluteDir = $_SERVER['DOCUMENT_ROOT'] . "/GGHexo/src/";
+    	#$articleAbsoluteDir = "/GGHexo/src/";
     	$articlerelativeDir = "/GGHexo/src/";
     	// 搜索目录下所有的文件和文件夹
 		$rt         = ToolUtil::deepScanDir($articleAbsoluteDir);
@@ -101,6 +101,8 @@ class CatchController extends Controller {
 						$author = $matches[1];
 						// 去掉换行
 						$author = str_replace("\n",'',$author); 
+						// 去掉空格
+						$translator = str_replace(" ",'',$translator); 
 					}else{
 						$author = "";
 					}
@@ -119,6 +121,12 @@ class CatchController extends Controller {
 						$translator = $matches[1];
 						// 去掉换行
 						$translator = str_replace("\n",'',$translator); 
+						// 去掉空格
+						$translator = str_replace(" ",'',$translator); 
+						// 替换逗号为|
+						$translator = str_replace(",",'｜',$translator);
+						// 替换逗号为|
+						$translator = str_replace("，",'｜',$translator);
 					}else{
 						$translator = "";
 					}
@@ -128,6 +136,8 @@ class CatchController extends Controller {
 						$proofreader = $matches[1];
 						// 去掉换行
 						$proofreader = str_replace("\n",'',$proofreader); 
+						// 去掉空格
+						$translator = str_replace(" ",'',$translator); 
 					}else{
 						$proofreader = "";
 					}
@@ -137,6 +147,8 @@ class CatchController extends Controller {
 						$finalization = $matches[1];
 						// 去掉换行
 						$finalization = str_replace("\n",'',$finalization); 
+						// 去掉空格
+						$translator = str_replace(" ",'',$translator); 
 					}else{
 						$finalization = "";
 					}

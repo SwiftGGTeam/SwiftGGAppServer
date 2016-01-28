@@ -2,12 +2,12 @@
 //宏定义
 
 // local
-#define('APPLIB_PATH', $_SERVER['DOCUMENT_ROOT'] . "/SwiftGGAppServer/app/");
-#define('LOG_ROOT', "/SwiftGGAppServer/app/logs/");
+define('APPLIB_PATH', $_SERVER['DOCUMENT_ROOT'] . "/SwiftGGAppServer/app/");
+define('LOG_ROOT', "/SwiftGGAppServer/app/logs/");
 
 // server
-define('APPLIB_PATH', $_SERVER['DOCUMENT_ROOT'] . "/app/");
-define('LOG_ROOT', "/app/logs/");
+#define('APPLIB_PATH', $_SERVER['DOCUMENT_ROOT'] . "/app/");
+#define('LOG_ROOT', "/app/logs/");
 
 //路径：  /usr/share/nginx/html/SwiftGGAppServer/
 

@@ -2,12 +2,12 @@
 
 require_once (APPLIB_PATH.'config/app.inc.php');
 
-class SGTypeModel {
+class SGUserModel {
 
 	public $errCode = 0;
 	public $errMsg  = '';
 
-	public $tableName = 'sg_type';
+	public $tableName = 'sg_user';
 
 	public function __construct()
 	{
@@ -36,7 +36,7 @@ class SGTypeModel {
         $field  = substr( $field,0,-1);
         $value  = substr( $value,0,-1);       
         $sql    = "insert into $this->tableName($field) values($value)";
-        $result = mysql_query($sql) or die('sql语句执行失败，错误信息是：' . mysql_error());
+        $result = mysql_query($sql);
         $id     = mysql_insert_id();
         // 关闭数据库
         Flight::closeMysqlDB();
@@ -49,7 +49,7 @@ class SGTypeModel {
 	public function get_one_by_id($id) {
 		Flight::connectMysqlDB();
         $query  = "SELECT * FROM " . $this->tableName . " WHERE id = " . $id;
-        $result = mysql_query($query) or die('sql语句执行失败，错误信息是：' . mysql_error());
+        $result = mysql_query($query);
         $rt     =& mysql_fetch_array($result);
         Flight::closeMysqlDB();
         return $rt;
@@ -59,7 +59,7 @@ class SGTypeModel {
 	public function get_all(){
 		Flight::connectMysqlDB();
 		$query  = "SELECT * FROM " . $this->tableName;
-		$result = mysql_query($query) or die('sql语句执行失败，错误信息是：' . mysql_error());
+		$result = mysql_query($query);
 		$rt     = array();
 		$i      = 0;
 		while($row = mysql_fetch_array($result))
@@ -89,6 +89,27 @@ class SGTypeModel {
             'updated_time' => time()
         );
         return $this->insert($data);
+    }
+
+
+    // 带where条件的查询
+    public function get_one_by_where($dataArray){
+        // 连接数据库    
+        Flight::connectMysqlDB();
+        $where = "";
+        if( !is_array($dataArray) || count($dataArray) <= 0) {
+            $this->halt('没有要查询的数据');
+            return false;
+        }
+        while(list($key,$val) = each($dataArray)) {
+            $where .= "$key='$val' AND ";
+        }
+        $where  = substr($where, 0, -5);      
+        $sql    = "SELECT * FROM $this->tableName WHERE " . $where;
+        $result = mysql_query($sql) or die('sql语句执行失败，错误信息是：' . mysql_error());
+        $rt     =& mysql_fetch_array($result);
+        Flight::closeMysqlDB();
+        return $rt;
     }
 
 }

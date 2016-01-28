@@ -1,7 +1,16 @@
 ## SwiftGG-App-接口规范
 
-### 版本历史 
+### 版本历史
 ```
+V0.6：by CMB，2016-01-28
+
+* 修改了 User 模块 getInfo 接口部分不正确信息（score，github）
+
+V0.5：by CMB，2016-01-27
+
+* 填写了 domain 地址
+* 废除 获取文章详细信息 接口
+
 V0.4：by CMB，2016-01-24
 
 * 增加用户注册接口，修改了第三方注册接口
@@ -21,15 +30,15 @@ V0.1：by CMB，2015-12-15
 ```
 
 
-v0.5: 待定
+v0.7: 待定
 
 ### ModuleName: user
 
-#### userLogin
+#### userLogin（完成）
 
 使用场景：用户密码登录
 
-地址：http://xxx.com/v1/user/userLogin
+地址：http://123.57.250.194/v1/user/userLogin
 
 请求参数：
 
@@ -63,11 +72,11 @@ v0.5: 待定
 ```
 
 
-#### otherLogin
+#### otherLogin（未完成）
 
 使用场景：用户第三方登录
 
-地址：http://xxx.com/v1/user/otherLogin
+地址：http://123.57.250.194/v1/user/otherLogin
 
 请求参数：
 
@@ -100,11 +109,11 @@ v0.5: 待定
 }
 ```
 
-#### userRegister
+#### userRegister（完成）
 
 使用场景：用户注册
 
-地址：http://xxx.com/v1/user/userRegister
+地址：http://123.57.250.194/v1/user/userRegister
 
 请求参数：
 
@@ -138,11 +147,11 @@ v0.5: 待定
 ```
 
 
-#### userOtherRegister
+#### userOtherRegister（未完成）
 
 使用场景：用户第三方注册
 
-地址：http://xxx.com/v1/user/userOtherRegister
+地址：http://123.57.250.194/v1/user/userOtherRegister
 
 请求参数：
 
@@ -178,11 +187,11 @@ v0.5: 待定
 }
 ```
 
-#### getInfo
+#### getInfo（完成部分，已读文章和收集文章相关项未完成）
 
 使用场景：获取用户详细信息
 
-地址：http://xxx.com/v1/user/getInfo
+地址：http://123.57.250.194/v1/user/getInfo
 
 请求参数：
 
@@ -201,11 +210,11 @@ v0.5: 待定
 		"uid"       : 用户id,
 		"nickname"  : 用户名,
 		"imageUrl"  : 头像,
-		"socre"     : 用户积分,
-		"signatre"  : 个性签名,
+		"score"     : 用户积分,
+		"signature"  : 个性签名,
 		"sex"       : 性别,
 		"weibo"     : 绑定的微博号,
-		"wechat"    : 绑定的微信号,
+		"gitub"     : 绑定的github,
 		"qq"        : 绑定的QQ号,
 		"github"    : 绑定的github号,
 		"level"     : 用户级别,
@@ -233,11 +242,11 @@ v0.5: 待定
 ### ModuleName: article
 
 
-#### getCategoryList
+#### getCategoryList（已完成）
 
 使用场景：获取分类列表
 
-地址：http://xxx.com/v1/article/getCategoryList
+地址：http://123.57.250.194/v1/article/getCategoryList
 
 请求参数：
 
@@ -262,12 +271,12 @@ v0.5: 待定
 
 ---
 
-#### getArticlesByCategory
+#### getArticlesByCategory（已完成）
 
 使用场景：点击对应的分类显示文章列表
 
 
-地址：http://xxx.com/v1/article/getArticlesByCategory
+地址：http://123.57.250.194/v1/article/getArticlesByCategory
 
 请求参数：
 
@@ -312,12 +321,11 @@ v0.5: 待定
 
 ---
 
-#### getDetail
+#### getDetail（已废除）
 
 使用场景：获取文章详细信息
 
-
-地址：http://xxx.com/v1/article/getDetail
+地址：http://123.57.250.194/v1/article/getDetail
 
 请求参数：
 

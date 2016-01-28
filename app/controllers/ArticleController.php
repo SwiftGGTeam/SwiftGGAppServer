@@ -27,6 +27,9 @@ class ArticleController extends Controller {
     // v1版 获取分类列表
     public function getCategoryListV1(){
     	$categoryListData = $this->typeOpr->get_all();
+        if(empty($categoryListData)){
+            $this->errReturn('分类列表为空，请联系后台人员修复');
+        }
     	$categorySumArticleData = $this->articleTypeOpr->get_sum_clickednumber("type_id");
     	// 加入总数
     	foreach ($categorySumArticleData as $sumArticleData) {
@@ -60,9 +63,15 @@ class ArticleController extends Controller {
     	if(empty($_POST['categoryId'])){
     		// 为空则输出所有文章
     		$articleList = $this->articleOpr->get_all();
+            if(empty($articleList)){
+                $this->errReturn('文章列表为空，请联系后台人员修复');
+            }
     	}else{
     		// 按照分类id输出
     		$arrayId = $this->articleTypeOpr->get_all_by_typeId($_POST['categoryId']);
+            if(empty($arrayId)){
+                $this->errReturn('请求参数有误，无法找到该分类id');
+            }
     		foreach ($arrayId as $key => $value) {
     			$articleList[$key] = $this->articleOpr->get_one_by_id($value['type_id']);
     		}
@@ -94,13 +103,17 @@ class ArticleController extends Controller {
 
     // v1版 文章详情
     public function getDetailV1(){
-		// 封装数据
-    	$response = array(
-    		'ret'    => -1,
-    		'errMsg' => '接口已废除',
-    	);
-    	return $this->ajaxReturn($response);
+		$this->errReturn('接口已废除');
     }
 
+    // 错误返回接口
+    public function errReturn($errMsg){
+        // 封装数据
+        $response = array(
+            'ret'    => -1,
+            'errMsg' => $errMsg,
+        );
+        return $this->ajaxReturn($response);
+    }
 }
 

@@ -57,7 +57,7 @@ class SGArticleModel {
 	// 获取所有文章数据
 	public function get_all(){
 		Flight::connectMysqlDB();
-		$query  = "SELECT * FROM " . $this->tableName;
+		$query  = "SELECT * FROM " . $this->tableName . " order by updated_time DESC";
 		$result = mysql_query($query) or die('sql语句执行失败，错误信息是：' . mysql_error());
 		$rt     = array();
 		$i      = 0;
