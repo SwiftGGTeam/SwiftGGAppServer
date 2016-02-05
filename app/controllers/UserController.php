@@ -23,12 +23,13 @@ class UserController extends Controller {
 
     // 用户注册
     public function userRegisterV1(){
-        $catchRequestRaw = file_get_contents('php://input');
-        $catchRequest = json_decode($catchRequestRaw, true);
-        $this->writeFile(date('Y/m/d H:i:s',time()) . ' userRegisterV1 ' . $catchRequestRaw ."\n");
-    	$userName = $catchRequest['userName'];
-        $password = $catchRequest['password'];
-        if(!empty($userName) && !empty($password)){
+        // 写log
+        $txt = json_encode($_POST);
+        $this->writeFile(date('Y-m-d H:i:s',time()) . ' userRegisterV1 ' . $txt ."\n");
+        // 参数判断
+        if(!empty($_POST['userName']) && !empty($_POST['password'])){
+            $userName = $_POST['userName'];
+            $password = $_POST['password'];
             // 去除注入
             $userName = str_replace("=",'',$userName);
             $password = str_replace("=",'',$password);
@@ -73,12 +74,13 @@ class UserController extends Controller {
 
     // 用户登录接口
     public function userLoginV1(){
-        $catchRequestRaw = file_get_contents('php://input');
-        $catchRequest = json_decode($catchRequestRaw, true);
-        $this->writeFile(date('Y/m/d H:i:s',time()) . ' userLoginV1 ' . $catchRequestRaw ."\n");
-        $userName = $catchRequest['userName'];
-        $password = $catchRequest['password'];
-    	if(!empty($userName) && !empty($password)){
+        // 写log
+        $txt = json_encode($_POST);
+        $this->writeFile(date('Y-m-d H:i:s',time()) . ' userLoginV1 ' . $txt ."\n");
+        // 参数判断
+        if(!empty($_POST['userName']) && !empty($_POST['password'])){
+            $userName = $_POST['userName'];
+            $password = $_POST['password'];
             // 去除注入
             $userName = str_replace("=",'',$userName);
             $password = str_replace("=",'',$password);
@@ -179,11 +181,6 @@ class UserController extends Controller {
     public function writeFile($txt){
         #$path = $_SERVER['DOCUMENT_ROOT'] . "/SwiftGGAppServer/log.txt";
         $path = $_SERVER['DOCUMENT_ROOT'] . "/log.txt";
-        if (!file_exists($path)) 
-        { 
-            createFolder(dirname($path)); 
-            mkdir($path, 0777); 
-        } 
         file_put_contents($path, $txt, FILE_APPEND);
     }
 
