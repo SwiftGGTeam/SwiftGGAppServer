@@ -11,8 +11,8 @@ class CatchController extends Controller {
     	$articleOpr = Flight::model(INTERFACE_SGARTICLE);
     	$typeOpr    = Flight::model(INTERFACE_SGTYPE);
     	$articleTypeOpr     = Flight::model(INTERFACE_SGARTICLETYPE);
-    	$articleAbsoluteDir = $_SERVER['DOCUMENT_ROOT'] . "/GGHexo/src/";
-    	#$articleAbsoluteDir = "/GGHexo/src/";
+    	#$articleAbsoluteDir = $_SERVER['DOCUMENT_ROOT'] . "/GGHexo/src/";
+    	$articleAbsoluteDir = "/GGHexo/src/";
     	$articlerelativeDir = "/GGHexo/src/";
     	// 搜索目录下所有的文件和文件夹
 		$rt         = ToolUtil::deepScanDir($articleAbsoluteDir);
