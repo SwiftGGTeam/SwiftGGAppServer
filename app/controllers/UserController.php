@@ -59,7 +59,7 @@ class UserController extends Controller {
                 $response = array(
                     'ret'  => 0,
                     'data' => array(
-                        'userId' => $userId
+                        'userId' => intval($userId)
                     ),
                     'errMsg' => ''
                 );
@@ -101,7 +101,7 @@ class UserController extends Controller {
                     $response = array(
                         'ret'  => 0,
                         'data' => array(
-                            'userId' => $userInfo['id']
+                            'userId' => intval($userInfo['id'])
                         ),
                         'errMsg' => ''
                     );
@@ -137,21 +137,21 @@ class UserController extends Controller {
 
                 // 封装数据
                 $data = array(
-                    'uid' => $uid,
+                    'uid' => intval($uid),
                     'nickname' => $userInfo['nickname'],
                     'imageUrl' => $imageUrl,
                     'score' => $userInfo['score'],
                     'signature' => $userInfo['signature'],
-                    'sex' => rand(1,2),
+                    'sex' => intval(rand(1,2)),
                     'weibo' => $userInfo['weibo'],
                     'github' => $userInfo['github'],
                     'qq' => $userInfo['qq'],
                     'level' => $userInfo['level'],
-                    'readArticlesNumber' => rand(0,122),
-                    'readWordsNumber' => rand(1000,999999),
-                    'collectArticlesNumber' => rand(0,99),
-                    'restArticlesNumber' => rand(0,122),
-                    'sort' => rand(0,100),
+                    'readArticlesNumber' => intval(rand(0,122)),
+                    'readWordsNumber' => intval(rand(1000,999999)),
+                    'collectArticlesNumber' => intval(rand(0,99)),
+                    'restArticlesNumber' => intval(rand(0,122)),
+                    'sort' => intval(rand(0,100)),
                     'reading' => array(),
                     'collection' => array()
                 );
