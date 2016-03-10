@@ -4,119 +4,177 @@ require_once (APPLIB_PATH.'libs/NetUtil.php');
 require_once (APPLIB_PATH.'config/app.inc.php');
 require_once (APPLIB_PATH.'libs/ToolUtil.php');
 
-
+/*
+ *  抓取文章
+ */
 class CatchController extends Controller {
 
     public function index() { 
+    	// 导入MODEL
     	$articleOpr = Flight::model(INTERFACE_SGARTICLE);
     	$typeOpr    = Flight::model(INTERFACE_SGTYPE);
-    	$articleTypeOpr     = Flight::model(INTERFACE_SGARTICLETYPE);
-    	#$articleAbsoluteDir = $_SERVER['DOCUMENT_ROOT'] . "/GGHexo/src/";
-    	$articleAbsoluteDir = "/GGHexo/src/";
-    	$articlerelativeDir = "/GGHexo/src/";
+    	$articleTypeOpr = Flight::model(INTERFACE_SGARTICLETYPE);
+    	// 解析文章的路径
+    	$articleDir = $_SERVER['DOCUMENT_ROOT'] . "/source/_posts/";
     	// 搜索目录下所有的文件和文件夹
-		$rt         = ToolUtil::deepScanDir($articleAbsoluteDir);
+		$rt         = ToolUtil::deepScanDir($articleDir);
+		// 记录参数
+		$articleHandleNumber = 0; // 处理的文章数
+		$typeHandleNumber    = 0; // 处理的分类数
+		$jumpHandleNumber    = 0; // 不处理的文章数
 		// 遍历所有 md 文件的内容
 		foreach ($rt['file'] as $key => $value) {
 			// 判断是否为 md 文件
+			$isWeekly = false;
 			if(ToolUtil::getExtension($value) == 'md'){
+				// 一个个文件进行读取
 				$content = ToolUtil::readFile($value);
 				$matches = array();
 				$data    = array(); 
-				$articleHandleNumber = 0;
-				$typeHandleNumber    = 0;
 				if($content){
-					// 解析标题
-					preg_match('/title: ([\s\S]+?)[\s\S*?]date/',$content,$matches);
+					/* 解析标题 */
+					preg_match('/title: ([\s\S]+?)\n/',$content,$matches);
 					if(!empty($matches[1])) {
 						$title = $matches[1];
 						// 去掉双引号
 						$title = str_replace('"','',$title); 
-						// 去掉换行
-						$title = str_replace("\n",'',$title);
 						// 去掉前后空格
 						$title = trim($title);
 						// 判断数据库中是否存在该名称
 						if($articleOpr->judge_title($title)){
-							break;
-						}else{
-							$articleHandleNumber++;
+							$jumpHandleNumber++;
+							echo '跳出的文件名:' . $title . '<br>';
+							continue;
 						}
+						preg_match('/每周 Swift 社区问答/',$content,$matches);
+						if(!empty($matches)){
+							$isWeekly = true;
+						}
+						// 解析成功的文件名
+						//echo '--- title:' . $title . '<br>';
+						// 解析文件数累加
+						$articleHandleNumber++;
 					}else{
+						// 当无法解析时
 						$title = "";
+						//echo '无法解析的文件名(titile)' . $value . '<br>';
+						//continue;
 					}
-					// 解析日期
-					preg_match('/date: ([\s\S]+?)[\s\S*?]tags/' ,$content,$matches);
+					/* 解析日期 */
+					preg_match('/date:([\s\S]+?)\n/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$date = $matches[1];
 						// 去掉换行
 						$date = str_replace("\n",'',$date);
+						// 解析成功的文件名
+						//echo '--- Data:' . $date . '<br>';
 					}else{
 						$date = "";
+						//echo '无法解析的文件名(date)' . $value . '<br>';
+						//continue;
 					}
 					// 解析标签
-					preg_match('/tags: \[([\s\S]+?)\][\s\S*?]categories/' ,$content,$matches);
+					preg_match('/tags: \[([\s\S]+?)\]/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$tags = $matches[1];
 						// 去掉换行
-						$tags = str_replace("\n",'',$tags); 
+						$tags = str_replace("\n",'',$tags);
+						// 解析成功的文件名
+						//echo '--- tags:' . $tags . '<br>'; 
 					}else{
 						$tags = "";
+						//echo '无法解析的文件名(tags)' . $value . '<br>';
+						//continue;
 					}
 					// 解析分类
-					preg_match('/categories: \[([\s\S]+?)\][\s\S*?]permalink/' ,$content,$matches);
+					preg_match('/categories: \[([\s\S]+?)\]\n/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$categories = $matches[1];
 						// 去掉换行
 						$categories = str_replace("\n",'',$categories);
 						$categories = explode(",",$categories);
 						$typeId     = array();
+						// 解析成功的文件名
+						//echo '--- categories:';
 						foreach ($categories as $key => $value) {
+							//echo $value . ' ';
 							$typeId[$key] = $typeOpr->get_id_by_name($value);
 						}
+						//echo '<br>';
 					}else{
 						$categories = "";
+						//echo '无法解析的文件名(categories)' . $value . '<br>';
+						//continue;
 					}
 					// 解析固定链接
-					preg_match('/permalink: ([\s\S]+?)[\s\S*?]---/' ,$content,$matches);
+					preg_match('/permalink: ([\s\S]+?)\n/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$permalink = $matches[1];
 						// 去掉换行
 						$permalink = str_replace("\n",'',$permalink); 
+						// 解析成功的文件名
+						//echo '--- permalink:' . $permalink . '<br>'; 
 					}else{
 						$permalink = "";
+						//echo '无法解析的文件名(permalink)' . $value . '<br>';
+						//continue;
 					}
 					// 解析原文链接
-					preg_match('/原文链接=([\s\S]+?)[\s\S*?]作者=/' ,$content,$matches);
+					preg_match('/\[原文链接\]\(([\s\S]+?)\)/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$originalUrl = $matches[1];
 						// 去掉换行
-						$originalUrl = str_replace("\n",'',$originalUrl); 
+						$originalUrl = str_replace("\n",'',$originalUrl);
+						// 解析成功的文件名
+						//echo '--- originalUrl:' . $originalUrl . '<br>'; 
 					}else{
 						$originalUrl = "";
+						//echo '无法解析的文件名(originalUrl)' . $value . '<br>';
+						//continue;
 					}
 					// 解析作者
-					preg_match('/作者=([\s\S]+?)[\s\S*?]原文日期=/' ,$content,$matches);
-					if(!empty($matches[1])) {
+					preg_match('/作者：([\s\S]+?)，/' ,$content,$matches);
+					if(!empty($matches[1]) && !$isWeekly) {
 						$author = $matches[1];
 						// 去掉换行
 						$author = str_replace("\n",'',$author); 
 						// 去掉空格
-						$translator = str_replace(" ",'',$translator); 
+						$author = str_replace(" ",'',$author); 
+						// 解析成功的文件名
+						//echo '--- author:' . $author . '<br>';
+					}else if($isWeekly){
+						$author = "";
+						preg_match('/作者：([\s\S]+?)\n/' ,$content,$matches);
+						if(!empty($matches)){
+							$header = $matches[0];
+							preg_match_all('/\[([\s\S]*?)\]/' ,$header,$matches);
+							if(!empty($matches)){						
+								foreach ($matches[1] as $key => $value) {
+									if( $key == 0 ) $author .= $value;
+									else $author .= '｜' . $value;
+								}
+							}
+						}
 					}else{
 						$author = "";
+						//echo '无法解析的文件名(author)' . $value . '<br>';
+						//continue;
 					}
 					// 解析原文日期
-					preg_match('/原文日期=([\s\S]+?)[\s\S*?]译者=/' ,$content,$matches);
+					preg_match('/原文日期：([\s\S]+?)\n/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$originalDate = $matches[1];
 						// 去掉换行
 						$originalDate = str_replace("\n",'',$originalDate); 
+						// 解析成功的文件名
+						//echo '--- originalDate:' . $originalDate . '<br>'; 
 					}else{
 						$originalDate = "";
+						//echo '无法解析的文件名(originalDate)' . $value . '<br>';
+						//continue;
 					}
 					// 解析译者
-					preg_match('/译者=([\s\S]+?)[\s\S*?]校对=/' ,$content,$matches);
+					preg_match('/译者：\[([\s\S]+?)\]/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$translator = $matches[1];
 						// 去掉换行
@@ -127,30 +185,42 @@ class CatchController extends Controller {
 						$translator = str_replace(",",'｜',$translator);
 						// 替换逗号为|
 						$translator = str_replace("，",'｜',$translator);
+						// 解析成功的文件名
+						//echo '--- translator:' . $translator . '<br>';
 					}else{
 						$translator = "";
+						//echo '无法解析的文件名(translator)' . $value . '<br>';
+						//continue;
 					}
 					// 解析校对
-					preg_match('/校对=([\s\S]+?)[\s\S*?]定稿=/' ,$content,$matches);
+					preg_match('/校对：\[([\s\S]+?)\]/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$proofreader = $matches[1];
 						// 去掉换行
 						$proofreader = str_replace("\n",'',$proofreader); 
 						// 去掉空格
 						$translator = str_replace(" ",'',$translator); 
+						// 解析成功的文件名
+						//echo '--- proofreader:' . $proofreader . '<br>';
 					}else{
 						$proofreader = "";
+						//echo '无法解析的文件名(proofreader)' . $value . '<br>';
+						//continue;
 					}
 					// 解析定稿
-					preg_match('/定稿=([\s\S]+?)\n/' ,$content,$matches);
+					preg_match('/定稿：\[([\s\S]+?)\]/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$finalization = $matches[1];
 						// 去掉换行
 						$finalization = str_replace("\n",'',$finalization); 
 						// 去掉空格
 						$translator = str_replace(" ",'',$translator); 
+						// 解析成功的文件名
+						//echo '--- translator:' . $translator . '<br>';
 					}else{
 						$finalization = "";
+						//echo '无法解析的文件名(translator)' . $value . '<br>';
+						//continue;
 					}
 					// 数据封装
 					$articleData = array(
@@ -171,6 +241,8 @@ class CatchController extends Controller {
 						'created_time'   => time(),
 						'updated_time'   => strtotime($date)
 					);
+					ToolUtil::p($articleData);
+					echo "<br>";
 					$articleId = $articleOpr->insert($articleData);
 					$typeHandleNumber += COUNT($articleId);
 					foreach ($typeId as $key => $value) {
@@ -183,7 +255,7 @@ class CatchController extends Controller {
 				}
 			}
 		}
-		echo '一共添加了 ' . $typeHandleNumber . ' 个分类, ' . $articleHandleNumber . ' 篇文章';
+		echo '一共添加了 ' . $typeHandleNumber . ' 个分类, ' . $articleHandleNumber . ' 篇文章, 跳出文章数:' . $jumpHandleNumber;
     }
 
     // 获取文章列表
