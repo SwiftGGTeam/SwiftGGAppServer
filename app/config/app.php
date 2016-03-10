@@ -29,7 +29,7 @@ return array(
         array("/v1/article/getCategoryList" , "Article:getCategoryListV1"),
         array("/v1/article/getArticlesByCategory" , "Article:getArticlesByCategoryV1"),
         array("/v1/article/getDetail" , "Article:getDetailV1"),
-        array("/v1/catch/" , "Catch:index"),
+        array("/v1/catch/newArticle" , "Catch:addNewArticle"),
         // 其它规则
         array("*", "Main:index"),
     ), 

@@ -9,7 +9,7 @@ require_once (APPLIB_PATH.'libs/ToolUtil.php');
  */
 class CatchController extends Controller {
 
-    public function index() { 
+    public function addNewArticle() { 
     	// 导入MODEL
     	$articleOpr = Flight::model(INTERFACE_SGARTICLE);
     	$typeOpr    = Flight::model(INTERFACE_SGTYPE);
@@ -256,6 +256,12 @@ class CatchController extends Controller {
 			}
 		}
 		echo '一共添加了 ' . $typeHandleNumber . ' 个分类, ' . $articleHandleNumber . ' 篇文章, 跳出文章数:' . $jumpHandleNumber;
+    }
+
+    // 更新所有文章
+    public function updateAllArticle() { 
+    	
+    	echo '一共更新了 ' . $typeHandleNumber . ' 个分类, ' . $articleHandleNumber . ' 篇文章, 跳出文章数:' . $jumpHandleNumber;
     }
 
     // 获取文章列表
