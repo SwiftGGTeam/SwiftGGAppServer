@@ -2,12 +2,12 @@
 //宏定义
 
 // local
-define('APPLIB_PATH', $_SERVER['DOCUMENT_ROOT'] . "/SwiftGGAppServer/app/");
-define('LOG_ROOT', "/SwiftGGAppServer/app/logs/");
+//define('APPLIB_PATH', $_SERVER['DOCUMENT_ROOT'] . "/SwiftGGAppServer/app/");
+//define('LOG_ROOT', $_SERVER['DOCUMENT_ROOT'] . "/SwiftGGAppServer/" );
 
 // server
-#define('APPLIB_PATH', $_SERVER['DOCUMENT_ROOT'] . "/app/");
-#define('LOG_ROOT', "/app/logs/");
+define('APPLIB_PATH', $_SERVER['DOCUMENT_ROOT'] . "/app/");
+define('LOG_ROOT', "$_SERVER['DOCUMENT_ROOT']");
 
 //路径：  /usr/share/nginx/html/SwiftGGAppServer/
 
@@ -21,7 +21,7 @@ return array(
 
     //路由配置
     "flight.routes" => array(
-        // V1.0接口规范 路由规则
+        // V1.0接口规范
         array("/v1/user/otherLogin" , "User:otherLoginV1"),
         array("/v1/user/userRegister", "User:userRegisterV1"),
         array("/v1/user/userLogin" , "User:userLoginV1"),

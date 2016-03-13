@@ -309,5 +309,33 @@ class Controller {
                 exit($data);            
         }
     }
+
+    // 错误返回接口
+    public function errReturn($errCode, $errMsg){
+        // 封装数据
+        $response = array(
+            'ret'    => $errCode,
+            'errMsg' => $errMsg,
+        );
+        return $this->ajaxReturn($response);
+    }
+
+    // 成功返回接口
+    public function sucReturn($data){
+        // 封装数据
+        $response = array(
+            'ret'  => 0,
+            'data' => $data,
+        );
+        return $this->ajaxReturn($response);
+    }
+
+    // Log
+    public function writeLog($txt){
+        $path = LOG_ROOT . "log.txt";
+        $date = date('Y-m-d H:i:s',time());
+        $txt  = $date . ' ' . $txt . "\n";
+        file_put_contents($path, $txt, FILE_APPEND);
+    }
 }
 

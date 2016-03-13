@@ -4,9 +4,12 @@
 // use \Controller;
 
 require_once (APPLIB_PATH.'libs/NetUtil.php');
-require_once (APPLIB_PATH.'config/app.inc.php');
 require_once (APPLIB_PATH.'libs/ToolUtil.php');
+require_once (APPLIB_PATH.'config/app.inc.php');
 
+/*
+ *  用户模块接口
+ */
 class UserController extends Controller {
 
     // 用户 Model 操作
@@ -17,28 +20,35 @@ class UserController extends Controller {
         $this->userOpr = Flight::model(INTERFACE_SGUSER);
     }
 
-    public function otherLoginV1(){
-    	echo 'UserController:otherLoginV1';
-    }
-
     // 用户注册
     public function userRegisterV1(){
         // 写log
         $txt = json_encode($_POST);
-        $this->writeFile(date('Y-m-d H:i:s',time()) . ' userRegisterV1 ' . $txt ."\n");
+        $this->writeLog('userRegisterV1：' . $txt);
+
         // 参数判断
         if(!empty($_POST['userName']) && !empty($_POST['password'])){
             $userName = $_POST['userName'];
             $password = $_POST['password'];
-            // 去除注入
-            $userName = str_replace("=",'',$userName);
-            $password = str_replace("=",'',$password);
-            // 查询账号信息
-            $userVaild = array(
-                'account'  => $userName,
-            );
-            $userInfo = $this->userOpr->get_one_by_where($userVaild);
-            if(empty($userInfo)){
+
+            // 判断是否含有特殊字符
+            if(preg_match("/[\'.,。，／:;*?~`!@#$%^&+=＝)(<>{}]|\]|\[|\/|\\\|\"|\|/",$userName)){
+                $this->errReturn(USERNAME_SPECIAL_CHARACTER,'用户名含有特殊字符');
+            }
+            if(preg_match("/[\'.,。，／:;*?~`!@#$%^&+=＝)(<>{}]|\]|\[|\/|\\\|\"|\|/",$password)){
+                $this->errReturn(PASSWORD_SPECIAL_CHARACTER,'密码含有特殊字符');
+            }
+
+            // 判断长度
+            if(strlen($userName) < USERNAME_LENGTH){
+                $this->errReturn(USERNAME_LENGTH_NOT_ENOUGH,'用户名位数必须大于或等于'.USERNAME_LENGTH);
+            }
+            if(strlen($password) < PASSWORD_LENGTH){
+                $this->errReturn(PASSWORD_LENGTH_NOT_ENOUGH,'密码位数必须大于或等于'.PASSWORD_LENGTH);
+            }
+
+            // 查询用户名是否存在
+            if(!$this->userOpr->isExistByUserName($userName)){
                 // 生成盐
                 $salt = ToolUtil::randomkeys(6);
                 // 封装数据
@@ -46,7 +56,7 @@ class UserController extends Controller {
                     'account'  => $userName,
                     'password' => md5($password . $salt),
                     'salt'     => $salt,
-                    'nickname' => "SwiftGG爱好者:" . $userName,
+                    'nickname' => "SwiftGG粉丝:" . $userName,
                     'the_third_type' => 'no',
                     'the_third_keyseri' => 'no',
                     'image_url' => '',
@@ -54,21 +64,15 @@ class UserController extends Controller {
                     'created_time' => time(),
                     'updated_time' => time()     
                 );
-                $userId = $this->userOpr->insert($data);
-                // 封装数据
-                $response = array(
-                    'ret'  => 0,
-                    'data' => array(
-                        'userId' => '' . $userId
-                    ),
-                    'errMsg' => ''
-                );
-                return $this->ajaxReturn($response);
+                $userId = $this->userOpr->addUser($data);
+                // 返回参数
+                $responseData = array('userId' => $userId);
+                return $this->sucReturn($responseData);
             }else{
-                $this->errReturn(-1,'账号已被注册，请重新输入');
+                $this->errReturn(USERNAME_IS_EXIST,'账号已被注册,请重新输入');
             }
         }else{
-           $this->errReturn(-2,'请求有误，参数不能为空'); 
+           $this->errReturn(ERR_PARAMETER,'请求参数有误'); 
         }
     }
 
@@ -76,58 +80,76 @@ class UserController extends Controller {
     public function userLoginV1(){
         // 写log
         $txt = json_encode($_POST);
-        $this->writeFile(date('Y-m-d H:i:s',time()) . ' userLoginV1 ' . $txt ."\n");
+        $this->writeLog('userLoginV1：' . $txt);
+
         // 参数判断
         if(!empty($_POST['userName']) && !empty($_POST['password'])){
             $userName = $_POST['userName'];
             $password = $_POST['password'];
-            // 去除注入
-            $userName = str_replace("=",'',$userName);
-            $password = str_replace("=",'',$password);
+
+            // 判断是否含有特殊字符
+            if(preg_match("/[\'.,。，／:;*?~`!@#$%^&+=＝)(<>{}]|\]|\[|\/|\\\|\"|\|/",$userName)){
+                $this->errReturn(USERNAME_SPECIAL_CHARACTER,'用户名含有特殊字符');
+            }
+            if(preg_match("/[\'.,。，／:;*?~`!@#$%^&+=＝)(<>{}]|\]|\[|\/|\\\|\"|\|/",$password)){
+                $this->errReturn(PASSWORD_SPECIAL_CHARACTER,'密码含有特殊字符');
+            }
+
+            // 判断长度
+            if(strlen($userName) < USERNAME_LENGTH){
+                $this->errReturn(USERNAME_LENGTH_NOT_ENOUGH,'用户名位数必须大于或等于'.USERNAME_LENGTH);
+            }
+            if(strlen($password) < PASSWORD_LENGTH){
+                $this->errReturn(PASSWORD_LENGTH_NOT_ENOUGH,'密码位数必须大于或等于'.PASSWORD_LENGTH);
+            }
+
             // 查询账号信息
             $userVaild = array(
                 'account'  => $userName,
             );
-            $userInfo = $this->userOpr->get_one_by_where($userVaild);
+            $userInfo = $this->userOpr->getUserByWhere($userVaild);
             if(!empty($userInfo)){
-                // 查询账号信息
+                // 帐号密码验证
                 $userVaild = array(
                     'account'   => $userInfo['account'],
                     'password'  => md5($password . $userInfo['salt'])
                 );
-                $userInfo = $this->userOpr->get_one_by_where($userVaild);
+                $userInfo = $this->userOpr->getUserByWhere($userVaild);
                 if(!empty($userInfo)){
                     // 封装数据
-                    $response = array(
-                        'ret'  => 0,
-                        'data' => array(
-                            'userId' => '' . $userInfo['id']
-                        ),
-                        'errMsg' => ''
-                    );
-                    return $this->ajaxReturn($response);
+                    $responseData = array('userId' => $userInfo['id']);
+                    return $this->sucReturn($responseData);
                 }else{
-                    $this->errReturn(-1,'密码有误,请重新输入.');
+                    $this->errReturn(PASSWORD_IS_ERROR,'密码有误,请重新输入.');
                 }
             }else{
-                $this->errReturn(-1,'账号不存在,请重新输入.');
+                $this->errReturn(USERNAME_IS_ERROR,'账号不存在,请重新输入.');
             }
         }else{
-           $this->errReturn(-2,'请求有误，参数不能为空'); 
+           $this->errReturn(ERR_PARAMETER,'请求参数有误'); 
         }
     }
 
     // 获取用户信息
     public function getInfoV1(){
+        // 写log
+        $txt = json_encode($_POST);
+        $this->writeLog('getInfoV1：' . $txt);
+
+        // 参数判断
     	if(!empty($_POST['uid'])){
             $uid = $_POST['uid'];
-            // 去除注入
-            $uid = str_replace("=",'',$uid);
+
+            // 判断是否含有特殊字符
+            if(preg_match("/[\'.,。，／:;*?~`!@#$%^&+=＝)(<>{}]|\]|\[|\/|\\\|\"|\|/",$uid)){
+                $this->errReturn(UID_SPECIAL_CHARACTER,'含有特殊字符');
+            }
+
             // 查询账号信息
             $userVaild = array(
                 'id'  => $uid,
             );
-            $userInfo = $this->userOpr->get_one_by_where($userVaild);
+            $userInfo = $this->userOpr->getUserByWhere($userVaild);
             if(!empty($userInfo)){
 
                 $imageUrl = $userInfo['image_url'];
@@ -155,33 +177,13 @@ class UserController extends Controller {
                     'reading' => array(),
                     'collection' => array()
                 );
-                $response = array(
-                    'ret'  => 0,
-                    'data' => $data
-                );
-                return $this->ajaxReturn($response);
+                return $this->sucReturn($data);
             }else{
-                $this->errReturn(-1,'账号不存在');
+                $this->errReturn(USERNAME_IS_ERROR, '账号不存在');
             }
         }else{
-            $this->errReturn(-2,'请求有误'); 
+            $this->errReturn(ERR_PARAMETER, '请求参数有误'); 
         }
-    }
-
-    // 错误返回接口
-    public function errReturn($ret, $errMsg){
-        // 封装数据
-        $response = array(
-            'ret'    => $ret,
-            'errMsg' => $errMsg,
-        );
-        return $this->ajaxReturn($response);
-    }
-
-    public function writeFile($txt){
-        #$path = $_SERVER['DOCUMENT_ROOT'] . "/SwiftGGAppServer/log.txt";
-        $path = $_SERVER['DOCUMENT_ROOT'] . "/log.txt";
-        file_put_contents($path, $txt, FILE_APPEND);
     }
 
 }

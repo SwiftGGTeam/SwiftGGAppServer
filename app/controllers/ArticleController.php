@@ -3,42 +3,36 @@
 // use \Flight;
 // use \Controller;
 
-require_once (APPLIB_PATH.'libs/NetUtil.php');
 require_once (APPLIB_PATH.'config/app.inc.php');
+require_once (APPLIB_PATH.'config/errorCode.inc.php');
+require_once (APPLIB_PATH.'libs/NetUtil.php');
 require_once (APPLIB_PATH.'libs/ToolUtil.php');
 
-
+/*
+ *  文章模块接口
+ */
 class ArticleController extends Controller {
 
 	// 文章 Model 操作
 	protected $articleOpr;
 	// 类型 Model 操作
     protected $typeOpr;
-    // 文章中间表 Model 操作
-    protected $articleTypeOpr; 
 
     public function __construct(){
     	// 初始化
 		$this->articleOpr     = Flight::model(INTERFACE_SGARTICLE);
 		$this->typeOpr        = Flight::model(INTERFACE_SGTYPE);
-		$this->articleTypeOpr = Flight::model(INTERFACE_SGARTICLETYPE);
     }
 
     // v1版 获取分类列表
     public function getCategoryListV1(){
-    	$categoryListData = $this->typeOpr->get_all();
+        // 写log
+        $this->writeLog('getCategoryListV1');
+
+    	$categoryListData = $this->typeOpr->getAllTypes();
         if(empty($categoryListData)){
-            $this->errReturn('分类列表为空，请联系后台人员修复');
+            $this->errReturn(TYPES_IS_NULL, '分类列表为空');
         }
-    	$categorySumArticleData = $this->articleTypeOpr->get_sum_clickednumber("type_id");
-    	// 加入总数
-    	foreach ($categorySumArticleData as $sumArticleData) {
-    		foreach ($categoryListData as $key => $listData) {
-    			if($sumArticleData["type_id"] == $listData['id']){
-    				$categoryListData[$key]['sum'] = $sumArticleData['sum'];
-    			}
-    		}
-    	}
     	// 封装数据
     	$data = array();
     	foreach ($categoryListData as $key => $value) {
@@ -51,31 +45,35 @@ class ArticleController extends Controller {
     		);
     		$data[$key] = $list;
     	}
-    	$response = array(
-    		'ret'  => 0,
-    		'data' => $data
-    	);
-    	return $this->ajaxReturn($response);
+    	return $this->sucReturn($data);
     }
 
     // v1版 对应分类的文章
     public function getArticlesByCategoryV1(){
+        // 写log
+        $txt = json_encode($_POST);
+        $this->writeLog('getArticlesByCategoryV1：' . $txt);
+
     	if(empty($_POST['categoryId'])){
+
     		// 为空则输出所有文章
-    		$articleList = $this->articleOpr->get_all();
+    		$articleList = $this->articleOpr->getAllArticles();
             if(empty($articleList)){
-                $this->errReturn('文章列表为空，请联系后台人员修复');
+                $this->errReturn(TYPES_IS_NULL, '分类列表为空');
             }
     	}else{
-    		// 按照分类id输出
-    		$arrayId = $this->articleTypeOpr->get_all_by_typeId($_POST['categoryId']);
-            if(empty($arrayId)){
-                $this->errReturn('请求参数有误，无法找到该分类id');
+
+            // 判断是否含有特殊字符
+            if(preg_match("/[\'.,。，／:;*?~`!@#$%^&+=＝)(<>{}]|\]|\[|\/|\\\|\"|\|/",$_POST['categoryId'])){
+                $this->errReturn(CATEGORYID_SPECIAL_CHARACTER,'含有特殊字符');
             }
-    		foreach ($arrayId as $key => $value) {
-    			$articleList[$key] = $this->articleOpr->get_one_by_id($value['type_id']);
-    		}
-    	}
+
+    		// 按照分类id输出
+    		$articleList = $this->articleOpr->getArticlesByTypeId($_POST['categoryId']);
+    	    if(!$articleList){
+                $this->errReturn(TYPE_IS_NOT_EXIST, '分类Id不存在');
+            }
+        }
     	// 封装数据
     	foreach ($articleList as $key => $value) {
 			$list = array(
@@ -93,27 +91,12 @@ class ArticleController extends Controller {
 			);
 			$data[$key] = $list;
 		}
-		// 封装数据
-    	$response = array(
-    		'ret'  => 0,
-    		'data' => $data
-    	);
-    	return $this->ajaxReturn($response);
+		return $this->sucReturn($data);
     }
 
     // v1版 文章详情
     public function getDetailV1(){
 		$this->errReturn('接口已废除');
-    }
-
-    // 错误返回接口
-    public function errReturn($errMsg){
-        // 封装数据
-        $response = array(
-            'ret'    => -1,
-            'errMsg' => $errMsg,
-        );
-        return $this->ajaxReturn($response);
     }
 }
 

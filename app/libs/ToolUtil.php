@@ -1,20 +1,22 @@
 <?php
-
+/**
+ * 封装一些常用的工具函数
+ */
 class ToolUtil
 {
-	//获取当前Unix时间戳和微秒数
+	/**
+	 * 获取当前Unix时间戳和微秒数
+	 */
     public static function getMicrotime()
 	{
    		list($usec, $sec) = explode(" ", microtime());
    		return ((float)$usec + (float)$sec);
 	}
 
-	// 查看数组
-	public static function p($array){
-    	ToolUtil::dump($array,1,'<pre>',0);
-	}
-
-	public static function dump($var, $echo=true, $label=null, $strict=true) {
+	/**
+	 * 打印数组
+	 */
+	public static function p($var, $echo=true, $label='<pre>', $strict=false) {
 	    $label = ($label === null) ? '' : rtrim($label) . ' ';
 	    if (!$strict) {
 	        if (ini_get('html_errors')) {
@@ -94,7 +96,9 @@ class ToolUtil
 		return $conn;
 	}
 
-	// 产生1-Z随机数
+	/**
+	 * 产生1-Z随机数
+	 */
 	public static function randomkeys($length) {
         $returnStr='';
         $pattern = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLOMNOPQRSTUVWXYZ';

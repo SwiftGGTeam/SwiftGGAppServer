@@ -8,7 +8,7 @@
 require_once (WEEDOLIB_PATH . 'libs/Logger.php');
 require_once (WEEDOLIB_PATH . 'config/errorCode.inc.php');
 
-define("REMOTE_LOG_SVR_HOST", "45.113.71.24");
+define("REMOTE_LOG_SVR_HOST", "");
 define("REMOTE_LOG_SVR_PORT", "80");
 class ILog
 {

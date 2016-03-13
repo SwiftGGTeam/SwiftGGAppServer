@@ -1,8 +1,8 @@
 <?php
 
 require_once (APPLIB_PATH.'libs/NetUtil.php');
-require_once (APPLIB_PATH.'config/app.inc.php');
 require_once (APPLIB_PATH.'libs/ToolUtil.php');
+require_once (APPLIB_PATH.'config/app.inc.php');
 
 /*
  *  抓取文章
@@ -41,7 +41,7 @@ class CatchController extends Controller {
 						// 去掉前后空格
 						$title = trim($title);
 						// 判断数据库中是否存在该名称
-						if($articleOpr->judge_title($title)){
+						if($articleOpr->isExistByTitle($title)){
 							$jumpHandleNumber++;
 							echo '跳出的文件名:' . $title . '<br>';
 							continue;
@@ -80,11 +80,11 @@ class CatchController extends Controller {
 						// 去掉换行
 						$tags = str_replace("\n",'',$tags);
 						// 解析成功的文件名
-						//echo '--- tags:' . $tags . '<br>'; 
+						// echo '--- tags:' . $tags . '<br>'; 
 					}else{
 						$tags = "";
-						//echo '无法解析的文件名(tags)' . $value . '<br>';
-						//continue;
+						// echo '无法解析的文件名(tags)' . $value . '<br>';
+						// continue;
 					}
 					// 解析分类
 					preg_match('/categories: \[([\s\S]+?)\]\n/' ,$content,$matches);
@@ -93,14 +93,16 @@ class CatchController extends Controller {
 						// 去掉换行
 						$categories = str_replace("\n",'',$categories);
 						$categories = explode(",",$categories);
-						$typeId     = array();
-						// 解析成功的文件名
-						//echo '--- categories:';
+						// $typeId     = array();
+						// // 解析成功的文件名
+						// // echo '--- categories:';
 						foreach ($categories as $key => $value) {
 							//echo $value . ' ';
-							$typeId[$key] = $typeOpr->get_id_by_name($value);
+							$ret = $typeOpr->getIdByName($value);
+							$typeId[$key] = $ret['id'];
+							if($ret['isAddType']) $typeHandleNumber++;
 						}
-						//echo '<br>';
+						// echo '<br>';
 					}else{
 						$categories = "";
 						//echo '无法解析的文件名(categories)' . $value . '<br>';
@@ -224,6 +226,7 @@ class CatchController extends Controller {
 					}
 					// 数据封装
 					$articleData = array(
+						'type'           => $typeId,
 						'tag'            => $tags,
 						'title'          => $title,
 						'cover_url'      => "",
@@ -242,16 +245,7 @@ class CatchController extends Controller {
 						'updated_time'   => strtotime($date)
 					);
 					ToolUtil::p($articleData);
-					echo "<br>";
-					$articleId = $articleOpr->insert($articleData);
-					$typeHandleNumber += COUNT($articleId);
-					foreach ($typeId as $key => $value) {
-						$articleTypeData = array(
-							'article_id' => $articleId,
-							'type_id'    => $value,
-						);
-						$articleTypeOpr->insert($articleTypeData);
-					}
+					$articleId = $articleOpr->addArticle($articleData);
 				}
 			}
 		}
