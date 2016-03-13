@@ -32,7 +32,7 @@ class CatchController extends Controller {
 				$data    = array(); 
 				if($content){
 					/* 解析标题 */
-					preg_match('/title: ([\s\S]+?)\n/',$content,$matches);
+					preg_match('/title: ([\s\S]+?)\r/',$content,$matches);
 					if(!empty($matches[1])) {
 						$title = $matches[1];
 						// 去掉双引号
@@ -60,7 +60,7 @@ class CatchController extends Controller {
 						//continue;
 					}
 					/* 解析日期 */
-					preg_match('/date:([\s\S]+?)\n/' ,$content,$matches);
+					preg_match('/date:([\s\S]+?)\r/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$date = $matches[1];
 						// 去掉换行
@@ -86,7 +86,7 @@ class CatchController extends Controller {
 						// continue;
 					}
 					// 解析分类
-					preg_match('/categories: \[([\s\S]+?)\]\n/' ,$content,$matches);
+					preg_match('/categories: \[([\s\S]+?)\]\r/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$categories = $matches[1];
 						// 去掉换行
@@ -108,7 +108,7 @@ class CatchController extends Controller {
 						//continue;
 					}
 					// 解析固定链接
-					preg_match('/permalink: ([\s\S]+?)\n/' ,$content,$matches);
+					preg_match('/permalink: ([\s\S]+?)\r/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$permalink = $matches[1];
 						// 去掉换行
@@ -145,7 +145,7 @@ class CatchController extends Controller {
 						//echo '--- author:' . $author . '<br>';
 					}else if($isWeekly){
 						$author = "";
-						preg_match('/作者：([\s\S]+?)\n/' ,$content,$matches);
+						preg_match('/作者：([\s\S]+?)\r/' ,$content,$matches);
 						if(!empty($matches)){
 							$header = $matches[0];
 							preg_match_all('/\[([\s\S]*?)\]/' ,$header,$matches);
@@ -162,7 +162,7 @@ class CatchController extends Controller {
 						//continue;
 					}
 					// 解析原文日期
-					preg_match('/原文日期：([\s\S]+?)\n/' ,$content,$matches);
+					preg_match('/原文日期：([\s\S]+?)\r/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$originalDate = $matches[1];
 						// 去掉换行
