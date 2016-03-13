@@ -15,7 +15,7 @@ class CatchController extends Controller {
     	$typeOpr    = Flight::model(INTERFACE_SGTYPE);
     	$articleTypeOpr = Flight::model(INTERFACE_SGARTICLETYPE);
     	// 解析文章的路径
-    	$articleDir = $_SERVER['DOCUMENT_ROOT'] . "/source/_posts/";
+    	$articleDir = ARTICLE_PATH;
     	// 搜索目录下所有的文件和文件夹
 		$rt         = ToolUtil::deepScanDir($articleDir);
 		// 记录参数
