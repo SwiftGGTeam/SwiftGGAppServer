@@ -5,7 +5,6 @@
 //定义每个Interface的名称
 define("INTERFACE_SGARTICLE" , "SGArticle");
 define("INTERFACE_SGTYPE" , "SGType");
-define("INTERFACE_SGARTICLETYPE" , "SGArticleType");
 define("INTERFACE_SGUSER" , "SGUser");
 
 //定义数据库表名称
