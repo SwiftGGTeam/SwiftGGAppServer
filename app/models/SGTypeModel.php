@@ -1,31 +1,23 @@
 <?php
-
 require_once (APPLIB_PATH.'config/app.inc.php');
 require_once (APPLIB_PATH.'config/errorCode.inc.php');
 require_once (APPLIB_PATH.'libs/ToolUtil.php');
-
 class SGTypeModel {
-
-	public $errCode = 0;
+    public $errCode = 0;
     public $errMsg  = '';
-
     public $_dB = null; //数据库连接
-
     public function __construct()
     {
         $this->init();      
     }
-
     public function init(){
         
     }
-
     //清除错误信息
     public function _clearERR() {
         $this -> errCode = 0;
         $this -> errMsg = '';
     }
-
     //连接数据库
     public function _initDB() {       
         $this -> _dB = Flight::connectMysqlDB();
@@ -36,26 +28,21 @@ class SGTypeModel {
         }
         return true;
     }
-
     //关闭数据库连接
     public function _closeDB(){
         Flight::closeMysqlDB();
     }
-
-	// 插入一条数据，返回id
+    // 插入一条数据，返回id
     public function AddType($dataArray) {
-    	$this -> _clearERR();
+        $this -> _clearERR();
         if(!$this->_initDB())
         {
             $this-> _closeDB();
             return false;
         }
-
         $table  = DB_TABLE_TYPE;
-
-    	$field = "";
+        $field = "";
         $value = "";
-
         if( !is_array($dataArray) || count($dataArray) <= 0) {
             $this->halt('没有要插入的数据');
             return false;
@@ -79,18 +66,15 @@ class SGTypeModel {
         $this -> _closeDB();
         return $id;
     }
-
-	// 获取一条记录
-	public function getOneTypeById($id) {
-		$this -> _clearERR();
+    // 获取一条记录
+    public function getOneTypeById($id) {
+        $this -> _clearERR();
         if(!$this->_initDB())
         {
             $this-> _closeDB();
             return false;
         }
-
         $table  = DB_TABLE_TYPE;
-
         try{
             $query  = "SELECT * FROM " . $table . " WHERE id = " . $id;
             $result = mysql_query($query);
@@ -104,28 +88,25 @@ class SGTypeModel {
         $this -> _closeDB();
         return $rt;
     }
-
-	// 获取所有文章数据
-	public function getAllTypes(){
-		$this -> _clearERR();
+    // 获取所有文章数据
+    public function getAllTypes(){
+        $this -> _clearERR();
         if(!$this->_initDB())
         {
             $this-> _closeDB();
             return false;
         }
-
         $articleTypeTable  = DB_TABLE_ARTICLE_TYPE;
         $typeTable  = DB_TABLE_TYPE;
-
         try{
             $query  = "SELECT * FROM $typeTable LEFT JOIN (SELECT `type_id`,count(*) AS sum FROM $articleTypeTable group BY `type_id`) b ON $typeTable.`id`=b.`type_id` ORDER BY `sum` DESC";
-    		$result = mysql_query($query);
-    		$rt     = array();
-    		$i      = 0;
-    		while($row = mysql_fetch_array($result))
-    		{
-    		 	$rt[$i++]=$row;
-    		}
+            $result = mysql_query($query);
+            $rt     = array();
+            $i      = 0;
+            while($row = mysql_fetch_array($result))
+            {
+                $rt[$i++]=$row;
+            }
         } catch (Exception $e) {
             $this -> errCode = GAME_ERR_DB_EXEC;
             $this -> errMsg = $e;
@@ -133,9 +114,8 @@ class SGTypeModel {
             return false;
         }
         $this -> _closeDB();
-		return $rt;
-	}
-
+        return $rt;
+    }
     // 获取对应类型的文章总数
     public function getAllArticlesNumber(){
         $this -> _clearERR();
@@ -144,9 +124,7 @@ class SGTypeModel {
             $this-> _closeDB();
             return false;
         }
-
         $table  = DB_TABLE_ARTICLE_TYPE;
-
         try{
             $query = "SELECT type_id,count(*) AS sum FROM $table group BY type_id";
             $result = mysql_query($query) or die('sql语句执行失败，错误信息是：' . mysql_error());
@@ -165,13 +143,10 @@ class SGTypeModel {
         $this -> _closeDB();
         return $rt;
     }
-
     // 查询在数据库中是否含有该分类（名称），如没有就执行插入
     // @return id
     public function getIdByName($name){
-
         $retArray = array();
-
         $articleTypeData = $this->getAllTypes();
         foreach ($articleTypeData as $key => $value) {
             // 找到该项，返回id
@@ -190,7 +165,6 @@ class SGTypeModel {
         $retArray = array('id' => $this->AddType($data) , 'isAddType' => true);
         return $retArray;
     }
-
     // 查看库中是否存在
     public function isExistById($typeId){
         $data = $this->getAllTypes();
@@ -201,7 +175,5 @@ class SGTypeModel {
         }
         return false;
     }
-
 }
-
 ?>

@@ -37,11 +37,11 @@ class ArticleController extends Controller {
     	$data = array();
     	foreach ($categoryListData as $key => $value) {
     		$list = array(
-    			'id'       => $value['id'],
+    			'id'       => (int)$value['id'],
     			'name'     => $value['name'],
     			//'coverUrl' => $value['cover_url'],
     			'coverUrl' => 'http://i8.tietuku.com/1a055c782b5a4c37.png',
-    			'sum'      => $value['sum']
+    			'sum'      => (int)$value['sum']
     		);
     		$data[$key] = $list;
     	}
@@ -77,7 +77,7 @@ class ArticleController extends Controller {
     	// 封装数据
     	foreach ($articleList as $key => $value) {
 			$list = array(
-				'id'             => $value['id'],
+				'id'             => (int)$value['id'],
 				// 'coverUrl'       => $value['cover_url'],
 				'coverUrl'       => 'http://i8.tietuku.com/1a055c782b5a4c37.png',
 				// 'authorImageUrl' => $value['author_image'],
@@ -86,7 +86,8 @@ class ArticleController extends Controller {
 				'title'          => $value['title'],
 				'articleUrl'     => "http://swift.gg/" . date('Y/m/d',$value['updated_time']) . '/' .$value['permalink'],//$value['content_url'],
 				'translator'     => $value['translator'],
-				'starsNumber'    => $value['stars_number'],
+				'description'    => $value['description'],
+                'starsNumber'    => (int)$value['stars_number'],
 				'commentsNumber' => rand(0,80)
 			);
 			$data[$key] = $list;

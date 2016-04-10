@@ -4,7 +4,7 @@
 // local
 // define('APPLIB_PATH', $_SERVER['DOCUMENT_ROOT'] . "/SwiftGGAppServer/app/");
 // define('LOG_ROOT', $_SERVER['DOCUMENT_ROOT'] . "/SwiftGGAppServer/" );
-// define('ARTICLE_PATH', $_SERVER['DOCUMENT_ROOT'] . "/source/_posts/");
+//define('ARTICLE_PATH', "/Applications/XAMPP/xamppfiles/htdocs/source/_posts/");
 
 // server
 define('APPLIB_PATH', $_SERVER['DOCUMENT_ROOT'] . "/app/");

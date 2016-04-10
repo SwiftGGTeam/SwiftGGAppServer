@@ -4,6 +4,8 @@ require_once (APPLIB_PATH.'libs/NetUtil.php');
 require_once (APPLIB_PATH.'libs/ToolUtil.php');
 require_once (APPLIB_PATH.'config/app.inc.php');
 
+header("Content-Type: text/html; charset=UTF-8");
+
 /*
  *  抓取文章
  */
@@ -17,6 +19,10 @@ class CatchController extends Controller {
     	$articleDir = ARTICLE_PATH;
     	// 搜索目录下所有的文件和文件夹
 		$rt         = ToolUtil::deepScanDir($articleDir);
+		if(count($rt['file']) == 0){
+			echo '文章目录有误';
+			return;
+		}
 		// 记录参数
 		$articleHandleNumber = 0; // 处理的文章数
 		$typeHandleNumber    = 0; // 处理的分类数
@@ -26,6 +32,7 @@ class CatchController extends Controller {
 			// 判断是否为 md 文件
 			$isWeekly = false;
 			if(ToolUtil::getExtension($value) == 'md'){
+				echo '正在解析的文件名:' . $value . '<br>';
 				// 一个个文件进行读取
 				$content = ToolUtil::readFile($value);
 				$matches = array();
@@ -42,8 +49,10 @@ class CatchController extends Controller {
 						// 判断数据库中是否存在该名称
 						if($articleOpr->isExistByTitle($title)){
 							$jumpHandleNumber++;
-							echo '跳出的文件名:' . $title . '<br>';
+							echo '---->跳出文章名:' . $title .'<br><br>';
 							continue;
+						}else{
+							echo '---->解析文章名:' . $title . '<br><br>';
 						}
 						preg_match('/每周 Swift 社区问答/',$content,$matches);
 						if(!empty($matches)){
@@ -78,6 +87,9 @@ class CatchController extends Controller {
 						$tags = $matches[1];
 						// 去掉换行
 						$tags = str_replace("\n",'',$tags);
+						$tags = str_replace(" ",'',$tags);
+						$tags = explode(",",$tags);
+						$tags = json_encode($tags);
 						// 解析成功的文件名
 						// echo '--- tags:' . $tags . '<br>'; 
 					}else{
@@ -91,17 +103,18 @@ class CatchController extends Controller {
 						$categories = $matches[1];
 						// 去掉换行
 						$categories = str_replace("\n",'',$categories);
+						$categories = str_replace(" ",'',$categories);
 						$categories = explode(",",$categories);
 						$typeId     = array();
-						// // 解析成功的文件名
-						// // echo '--- categories:';
+						// 解析成功的文件名
+						//echo '--- categories:';
 						foreach ($categories as $key => $value) {
-							//echo $value . ' ';
+						    //echo $value . ' ';
 							$ret = $typeOpr->getIdByName($value);
 							$typeId[$key] = $ret['id'];
 							if($ret['isAddType']) $typeHandleNumber++;
 						}
-						// echo '<br>';
+						//echo '<br>';
 					}else{
 						$typeId = "";
 						//echo '无法解析的文件名(categories)' . $value . '<br>';
@@ -223,6 +236,39 @@ class CatchController extends Controller {
 						//echo '无法解析的文件名(translator)' . $value . '<br>';
 						//continue;
 					}
+					// 解析描述
+					preg_match('/<!--此处开始正文-->\s*([\s\S]+?)\r*\<\!--more--\>/' ,$content,$matches);
+					if(!empty($matches[1]) && !$isWeekly) {
+						$description = $matches[1]; 
+						// preg_match('/\)([\s\S]+?)\<\!--more--\>/' ,$description,$matches);
+						// if(!empty($matches[1])) {
+						// 	$description = $matches[1];
+						// 	// 去掉换行
+						// 	$description = str_replace("\n",'',$description); 
+						// 	// 去掉\r
+						// 	$description = str_replace("\r",'',$description); 
+						// 	// 去掉#
+						// 	$description = str_replace("#",'',$description);
+						// 	// 去掉
+						// 	$description = str_replace("<!--此处开始正文-->",'',$description);
+						// 	// 去掉空格
+						// 	$description = str_replace(" ",'',$description);
+						// 	// 解析成功的文件名
+						// 	//echo '--- description:' . $description . '<br>';die;
+						// }
+					}else if($isWeekly){
+						$description = $title;
+						preg_match('/---([\s\S]+?)\<\!--more--\>/' ,$content,$matches);
+						if(!empty($matches)){
+							$description = $matches[1];
+						}else{
+							$description = $title;
+						}
+					}else{
+						$description = $title;
+						// echo '无法解析的文件名(description)' . $value . '<br>';
+						// continue;
+					}
 					// 数据封装
 					$articleData = array(
 						'type'           => $typeId,
@@ -238,13 +284,16 @@ class CatchController extends Controller {
 						'original_date'  => $originalDate,
 						'original_url'   => $originalUrl,
 						'permalink'      => $permalink,
+						'description'    => $description,
+						'content'        => $content,
 						'stars_number'   => 0,
 						'clicked_number' => 0,
 						'created_time'   => time(),
 						'updated_time'   => strtotime($date)
 					);
-					ToolUtil::p($articleData);
+					//ToolUtil::p($articleData);
 					$articleId = $articleOpr->addArticle($articleData);
+					//usleep(100000);
 				}
 			}
 		}

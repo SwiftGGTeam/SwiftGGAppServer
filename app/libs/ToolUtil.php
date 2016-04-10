@@ -81,7 +81,7 @@ class ToolUtil
 	 */
 	public static function readFile($file_path){
 		if(file_exists($file_path)){ 
-			if($fp=fopen($file_path,"a+")){ 
+			if($fp=fopen($file_path,"r")){ 
 				//读取文件 
 				$conn=fread($fp,filesize($file_path)); 
 				// //替换字符串 
