@@ -1,7 +1,12 @@
 ## SwiftGG-App-接口规范
 
 ### 版本历史
+
 ```
+V0.7：by CMB，2016-04-13
+
+* 修改为 restful，获取文章详细信息接口打开
+
 V0.6：by CMB，2016-01-28
 
 * 修改了 User 模块 getInfo 接口部分不正确信息（score，github）
@@ -30,7 +35,7 @@ V0.1：by CMB，2015-12-15
 ```
 
 
-v0.7: 待定
+v0.8: 待定
 
 ### ModuleName: user
 
@@ -38,7 +43,7 @@ v0.7: 待定
 
 使用场景：用户密码登录
 
-地址：http://123.57.250.194/v1/user/userLogin
+地址：`POST` http://123.57.250.194/v1/user/userLogin
 
 请求参数：
 
@@ -76,7 +81,7 @@ v0.7: 待定
 
 使用场景：用户第三方登录
 
-地址：http://123.57.250.194/v1/user/otherLogin
+地址：`POST` http://123.57.250.194/v1/user/otherLogin
 
 请求参数：
 
@@ -113,7 +118,7 @@ v0.7: 待定
 
 使用场景：用户注册
 
-地址：http://123.57.250.194/v1/user/userRegister
+地址：`POST` http://123.57.250.194/v1/user/userRegister
 
 请求参数：
 
@@ -151,7 +156,7 @@ v0.7: 待定
 
 使用场景：用户第三方注册
 
-地址：http://123.57.250.194/v1/user/userOtherRegister
+地址：`POST` http://123.57.250.194/v1/user/userOtherRegister
 
 请求参数：
 
@@ -191,7 +196,7 @@ v0.7: 待定
 
 使用场景：获取用户详细信息
 
-地址：http://123.57.250.194/v1/user/getInfo
+地址：`GET` http://123.57.250.194/v1/user/info
 
 请求参数：
 
@@ -246,7 +251,7 @@ v0.7: 待定
 
 使用场景：获取分类列表
 
-地址：http://123.57.250.194/v1/article/getCategoryList
+地址：`GET` http://123.57.250.194/v1/article/categoryList
 
 请求参数：
 
@@ -276,7 +281,7 @@ v0.7: 待定
 使用场景：点击对应的分类显示文章列表
 
 
-地址：http://123.57.250.194/v1/article/getArticlesByCategory
+地址：`GET` http://123.57.250.194/v1/article
 
 请求参数：
 
@@ -300,6 +305,7 @@ v0.7: 待定
 			"title"          : 文章标题, 
 			"articleUrl"     : 文章Url,
 			"translator"     : 翻译者名称,
+			"description"    : 文章描述,
 			"starsNumber"    : 文章点赞数,
 			"commentsNumber" : 评论数
 		},
@@ -311,6 +317,7 @@ v0.7: 待定
 			"title"          : 文章标题, 
 			"articleUrl"     : 文章Url,
 			"translator"     : 翻译者名称,
+			"description"    : 文章描述,
 			"starsNumber"    : 文章点赞数,
 			"commentsNumber" : 评论数
 		},
@@ -321,11 +328,11 @@ v0.7: 待定
 
 ---
 
-#### getDetail（已废除）
+#### getDetail（未完成）
 
 使用场景：获取文章详细信息
 
-地址：http://123.57.250.194/v1/article/getDetail
+地址：`GET` http://123.57.250.194/v1/article/detail
 
 请求参数：
 
@@ -353,10 +360,12 @@ v0.7: 待定
 		"authorImageUrl" : 文章作者的头像URL,
 		"originalDate"   : 原文发布日期,
 		"originalUrl"    : 原文链接,
+		"description"    : 文章描述,
 		"clickedNumber"  : 点击数,
 		"submitDate"     : 文章提交时间,
 		"starsNumber"    : 文章点赞数,
-		"commentsNumber" : 评论数",
+		"commentsNumber" : 评论数,
+		"content"        : 内容,
 		"comments" : [
 			{ "name" : 评论者名称, "imageUrl" : 评论者头像URL, "dateTime" : 评论时间 },
 			{ "name" : 评论者名称, "imageUrl" : 评论者头像URL, "dateTime" : 评论时间 },

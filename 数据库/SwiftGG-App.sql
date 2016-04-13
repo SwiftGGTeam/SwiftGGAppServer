@@ -6,15 +6,14 @@ CREATE TABLE IF NOT EXISTS `sg_type`(
   	`created_time`  int(11)       NOT NULL COMMENT '创建时间',
   	`updated_time`  int(11)       NOT NULL COMMENT '更新时间',
   	PRIMARY KEY (`id`)
-)ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='分类';
+)ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT='分类';
 
 /*文章*/
 CREATE TABLE IF NOT EXISTS `sg_article`(
 	`id`             int(11)       NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-	`tag`            varchar(2048) NULL     COMMENT '标签，使用JSON',
+	`tags`           varchar(2048) NULL     COMMENT '标签，使用JSON',
 	`title`          varchar(100)  NOT NULL COMMENT '题目',
 	`cover_url`      varchar(2048) NULL     COMMENT '封面图片URL',
-	`content_url`    varchar(2048) NOT NULL COMMENT '内容URL',
 	`translator`     varchar(100)  NULL     COMMENT '翻译者',
 	`proofreader`    varchar(100)  NULL     COMMENT '校对者',
 	`finalization`   varchar(100)  NULL     COMMENT '定稿者',
@@ -32,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `sg_article`(
   	PRIMARY KEY (`id`),
   	KEY `title`   (`title`),
   	KEY `author`  (`author`)
-)ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='文章';
+)ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT='文章';
 
 /*文章分类中间表*/
 CREATE TABLE IF NOT EXISTS `sg_article_type`(
@@ -40,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `sg_article_type`(
 	`type_id`    int(11)    NOT NULL COMMENT '分类ID,外键',
 	FOREIGN KEY (`article_id`) REFERENCES `sg_article` (`id`),
 	FOREIGN KEY (`type_id`)    REFERENCES `sg_type` (`id`)
-)ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='文章分类中间表';
+)ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT='文章分类中间表';
 
 /*用户*/
 CREATE TABLE IF NOT EXISTS `sg_user`(
@@ -63,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `sg_user`(
   	`updated_time`      int(11)        NOT NULL COMMENT '更新时间',
   	PRIMARY KEY (`id`),
   	UNIQUE KEY `account` (`account`)
-)ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户';
+)ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT='用户';
 
 /*用户阅读记录*/
 CREATE TABLE IF NOT EXISTS `sg_read`(
@@ -73,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `sg_read`(
 	`is_finished`   tinyint(1)   unsigned DEFAULT '0' COMMENT '是否完成阅读',
 	FOREIGN KEY (`user_id`)    REFERENCES `sg_user`    (`id`),
 	FOREIGN KEY (`article_id`) REFERENCES `sg_article` (`id`)
-)ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户阅读记录';
+)ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT='用户阅读记录';
 
 /*用户收藏记录*/
 CREATE TABLE IF NOT EXISTS `sg_collection`(
@@ -82,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `sg_collection`(
 	`datetime`      int(11)      NOT NULL COMMENT '收藏的时间',
 	FOREIGN KEY (`user_id`)    REFERENCES `sg_user`    (`id`),
 	FOREIGN KEY (`article_id`) REFERENCES `sg_article` (`id`)
-)ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户收藏记录';
+)ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT='用户收藏记录';
 
 /*评论*/
 CREATE TABLE IF NOT EXISTS `sg_comment`(
@@ -94,4 +93,4 @@ CREATE TABLE IF NOT EXISTS `sg_comment`(
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`user_id`)    REFERENCES `sg_user`    (`id`),
 	FOREIGN KEY (`article_id`) REFERENCES `sg_article` (`id`)
-)ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='评论';
+)ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT='评论';

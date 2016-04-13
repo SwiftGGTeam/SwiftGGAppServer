@@ -39,7 +39,7 @@ class CatchController extends Controller {
 				$data    = array(); 
 				if($content){
 					/* 解析标题 */
-					preg_match('/title: ([\s\S]+?)\n/',$content,$matches);
+					preg_match('/title:\s*([\s\S]+?)\s*\n/',$content,$matches);
 					if(!empty($matches[1])) {
 						$title = $matches[1];
 						// 去掉双引号
@@ -47,7 +47,7 @@ class CatchController extends Controller {
 						// 去掉前后空格
 						$title = trim($title);
 						// 判断数据库中是否存在该名称
-						if($articleOpr->isExistByTitle($title)){
+						if($articleId = $articleOpr->isExistByTitle($title)){
 							$jumpHandleNumber++;
 							echo '---->跳出文章名:' . $title .'<br><br>';
 							continue;
@@ -65,8 +65,9 @@ class CatchController extends Controller {
 					}else{
 						// 当无法解析时
 						$title = "";
+						echo '---->无法解析文章名:' . $title . '<br><br>';
 						//echo '无法解析的文件名(titile)' . $value . '<br>';
-						//continue;
+						continue;
 					}
 					/* 解析日期 */
 					preg_match('/date:([\s\S]+?)\n/' ,$content,$matches);
@@ -147,7 +148,7 @@ class CatchController extends Controller {
 						//continue;
 					}
 					// 解析作者
-					preg_match('/作者：([\s\S]+?)，/' ,$content,$matches);
+					preg_match('/作者：\s*([\s\S]+?)\s*，/' ,$content,$matches);
 					if(!empty($matches[1]) && !$isWeekly) {
 						$author = $matches[1];
 						// 去掉换行
@@ -158,7 +159,7 @@ class CatchController extends Controller {
 						//echo '--- author:' . $author . '<br>';
 					}else if($isWeekly){
 						$author = "";
-						preg_match('/作者：([\s\S]+?)\n/' ,$content,$matches);
+						preg_match('/作者：\s*([\s\S]+?)\s*\n/' ,$content,$matches);
 						if(!empty($matches)){
 							$header = $matches[0];
 							preg_match_all('/\[([\s\S]*?)\]/' ,$header,$matches);
@@ -175,7 +176,7 @@ class CatchController extends Controller {
 						//continue;
 					}
 					// 解析原文日期
-					preg_match('/原文日期：([\s\S]+?)\n/' ,$content,$matches);
+					preg_match('/原文日期：\s*([\s\S]+?)\s*\n/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$originalDate = $matches[1];
 						// 去掉换行
@@ -188,7 +189,7 @@ class CatchController extends Controller {
 						//continue;
 					}
 					// 解析译者
-					preg_match('/译者：\[([\s\S]+?)\]/' ,$content,$matches);
+					preg_match('/译者：\s*\[\s*([\s\S]+?)\s*\]\s*/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$translator = $matches[1];
 						// 去掉换行
@@ -207,7 +208,7 @@ class CatchController extends Controller {
 						//continue;
 					}
 					// 解析校对
-					preg_match('/校对：\[([\s\S]+?)\]/' ,$content,$matches);
+					preg_match('/校对：\s*\[\s*([\s\S]+?)\s*\]\s*/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$proofreader = $matches[1];
 						// 去掉换行
@@ -222,7 +223,7 @@ class CatchController extends Controller {
 						//continue;
 					}
 					// 解析定稿
-					preg_match('/定稿：\[([\s\S]+?)\]/' ,$content,$matches);
+					preg_match('/定稿：\s*\[\s*([\s\S]+?)\s*\]\s*/' ,$content,$matches);
 					if(!empty($matches[1])) {
 						$finalization = $matches[1];
 						// 去掉换行
@@ -240,22 +241,6 @@ class CatchController extends Controller {
 					preg_match('/<!--此处开始正文-->\s*([\s\S]+?)\r*\<\!--more--\>/' ,$content,$matches);
 					if(!empty($matches[1]) && !$isWeekly) {
 						$description = $matches[1]; 
-						// preg_match('/\)([\s\S]+?)\<\!--more--\>/' ,$description,$matches);
-						// if(!empty($matches[1])) {
-						// 	$description = $matches[1];
-						// 	// 去掉换行
-						// 	$description = str_replace("\n",'',$description); 
-						// 	// 去掉\r
-						// 	$description = str_replace("\r",'',$description); 
-						// 	// 去掉#
-						// 	$description = str_replace("#",'',$description);
-						// 	// 去掉
-						// 	$description = str_replace("<!--此处开始正文-->",'',$description);
-						// 	// 去掉空格
-						// 	$description = str_replace(" ",'',$description);
-						// 	// 解析成功的文件名
-						// 	//echo '--- description:' . $description . '<br>';die;
-						// }
 					}else if($isWeekly){
 						$description = $title;
 						preg_match('/---([\s\S]+?)\<\!--more--\>/' ,$content,$matches);
@@ -272,10 +257,9 @@ class CatchController extends Controller {
 					// 数据封装
 					$articleData = array(
 						'type'           => $typeId,
-						'tag'            => $tags,
+						'tags'           => $tags,
 						'title'          => $title,
 						'cover_url'      => "",
-						'content_url'    => "",//$articlerelativeDir . $permalink,
 						'translator'     => $translator,
 						'proofreader'    => $proofreader,
 						'finalization'   => $finalization,
@@ -288,8 +272,8 @@ class CatchController extends Controller {
 						'content'        => $content,
 						'stars_number'   => 0,
 						'clicked_number' => 0,
-						'created_time'   => time(),
-						'updated_time'   => strtotime($date)
+						'created_time'   => strtotime($date),
+						'updated_time'   => time()
 					);
 					//ToolUtil::p($articleData);
 					$articleId = $articleOpr->addArticle($articleData);

@@ -140,17 +140,24 @@ class SGArticleModel {
         $this -> _closeDB();
         return $rt;
     }
-    // 获取所有文章数据
-    public function getAllArticles(){
+
+    // 获取一条记录
+    public function getArticlesByTypeIdLimit($typeId,$pageIndex,$pageSize) {
         $this -> _clearERR();
+        // 查看id是否存在
+        if(!$this->typeOpr->isExistById($typeId)){
+            return false;
+        }
         if(!$this->_initDB())
         {
             $this-> _closeDB();
             return false;
         }
-        $table  = DB_TABLE_ARTICLE;
+        $articleTable     = DB_TABLE_ARTICLE;
+        $articleTypeTable = DB_TABLE_ARTICLE_TYPE;
+        $typeTable        = DB_TABLE_TYPE;
         try{
-            $query  = "SELECT * FROM " . $table . " order by updated_time DESC";
+            $query  = "SELECT $articleTable.* FROM $articleTypeTable INNER JOIN $articleTable ON $articleTable.`id`=$articleTypeTable.`article_id` inner JOIN $typeTable ON $typeTable.`id`=$articleTypeTable.`type_id` WHERE $typeTable.`id`=$typeId ORDER BY `created_time` DESC LIMIT " . ($pageIndex-1) * $pageSize . "," . $pageSize;
             $result = mysql_query($query);
             $rt     = array();
             $i      = 0;
@@ -167,6 +174,63 @@ class SGArticleModel {
         $this -> _closeDB();
         return $rt;
     }
+
+    // 获取所有文章数据
+    public function getAllArticles(){
+        $this -> _clearERR();
+        if(!$this->_initDB())
+        {
+            $this-> _closeDB();
+            return false;
+        }
+        $table  = DB_TABLE_ARTICLE;
+        try{
+            $query  = "SELECT * FROM " . $table . " order by created_time DESC";
+            $result = mysql_query($query);
+            $rt     = array();
+            $i      = 0;
+            while($row = mysql_fetch_array($result))
+            {
+                $rt[$i++] = $row;
+            }
+        } catch (Exception $e) {
+            $this -> errCode = GAME_ERR_DB_EXEC;
+            $this -> errMsg = $e;
+            $this -> _closeDB();
+            return false;
+        }
+        $this -> _closeDB();
+        return $rt;
+    }
+
+    // 获取所有文章数据
+    public function getAllArticlesLimit($pageIndex,$pageSize){
+        $this -> _clearERR();
+        if(!$this->_initDB())
+        {
+            $this-> _closeDB();
+            return false;
+        }
+        $table  = DB_TABLE_ARTICLE;
+        try{
+            $query  = "SELECT * FROM " . $table . " order by created_time DESC LIMIT " . ($pageIndex-1) * $pageSize . "," . $pageSize;
+            $result = mysql_query($query);
+            $rt     = array();
+            $i      = 0;
+            while($row = mysql_fetch_array($result))
+            {
+                $rt[$i++] = $row;
+            }
+        } catch (Exception $e) {
+            $this -> errCode = GAME_ERR_DB_EXEC;
+            $this -> errMsg = $e;
+            $this -> _closeDB();
+            return false;
+        }
+        $this -> _closeDB();
+        return $rt;
+    }
+
     // 获取一条记录通过id
     public function getOneArticleById($id) {
         $this -> _clearERR();
@@ -189,6 +253,7 @@ class SGArticleModel {
         $this -> _closeDB();
         return $rt;
     }
+
     // 获取最新文章的提交时间
     public function getLastUpdatedTime(){
         $this -> _clearERR();
@@ -212,12 +277,13 @@ class SGArticleModel {
         $this -> _closeDB();
         return $rt['updated_time'];
     }
+
     // 查看库中是否存在该名字的一项
     public function isExistByTitle($title){
         $data = $this->getAllArticles();
         foreach ($data as $key => $value) {
             if($value['title'] == $title){
-                return true;
+                return $value['id'];
             }
         }
         return false;

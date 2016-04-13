@@ -33,6 +33,7 @@ class ArticleController extends Controller {
         if(empty($categoryListData)){
             $this->errReturn(TYPES_IS_NULL, '分类列表为空');
         }
+        
     	// 封装数据
     	$data = array();
     	foreach ($categoryListData as $key => $value) {
@@ -51,27 +52,49 @@ class ArticleController extends Controller {
     // v1版 对应分类的文章
     public function getArticlesByCategoryV1(){
         // 写log
-        $txt = json_encode($_POST);
+        $txt = json_encode($_GET);
         $this->writeLog('getArticlesByCategoryV1：' . $txt);
 
-    	if(empty($_POST['categoryId'])){
-
+    	if(empty($_GET['categoryId'])){
     		// 为空则输出所有文章
-    		$articleList = $this->articleOpr->getAllArticles();
+            if(!empty($_GET['pageIndex']) && !empty($_GET['pageSize'])){
+                // 判断是否含有特殊字符
+                if(preg_match("/[\'.,。，／:;*?~`!@#$%^&+=＝)(<>{}]|\]|\[|\/|\\\|\"|\|/",$_GET['pageIndex'])){
+                    $this->errReturn(PAGEINDEX_SPECIAL_CHARACTER,'含有特殊字符');
+                }
+                if(preg_match("/[\'.,。，／:;*?~`!@#$%^&+=＝)(<>{}]|\]|\[|\/|\\\|\"|\|/",$_GET['pageSize'])){
+                    $this->errReturn(PAGEINDEX_SPECIAL_CHARACTER,'含有特殊字符');
+                }
+                $articleList = $this->articleOpr->getAllArticlesLimit($_GET['pageIndex'], $_GET['pageSize']);
+            }else{
+                $articleList = $this->articleOpr->getAllArticles();
+            }
             if(empty($articleList)){
-                $this->errReturn(TYPES_IS_NULL, '分类列表为空');
+                //$this->errReturn(TYPES_IS_NULL, '分类列表为空');
+                return $this->sucReturn("");
             }
     	}else{
-
             // 判断是否含有特殊字符
-            if(preg_match("/[\'.,。，／:;*?~`!@#$%^&+=＝)(<>{}]|\]|\[|\/|\\\|\"|\|/",$_POST['categoryId'])){
+            if(preg_match("/[\'.,。，／:;*?~`!@#$%^&+=＝)(<>{}]|\]|\[|\/|\\\|\"|\|/",$_GET['categoryId'])){
                 $this->errReturn(CATEGORYID_SPECIAL_CHARACTER,'含有特殊字符');
             }
-
-    		// 按照分类id输出
-    		$articleList = $this->articleOpr->getArticlesByTypeId($_POST['categoryId']);
-    	    if(!$articleList){
-                $this->errReturn(TYPE_IS_NOT_EXIST, '分类Id不存在');
+            // 为空则输出所有文章
+            if(!empty($_GET['pageIndex']) && !empty($_GET['pageSize'])){
+                // 判断是否含有特殊字符
+                if(preg_match("/[\'.,。，／:;*?~`!@#$%^&+=＝)(<>{}]|\]|\[|\/|\\\|\"|\|/",$_GET['pageIndex'])){
+                    $this->errReturn(PAGEINDEX_SPECIAL_CHARACTER,'含有特殊字符');
+                }
+                if(preg_match("/[\'.,。，／:;*?~`!@#$%^&+=＝)(<>{}]|\]|\[|\/|\\\|\"|\|/",$_GET['pageSize'])){
+                    $this->errReturn(PAGEINDEX_SPECIAL_CHARACTER,'含有特殊字符');
+                }
+                $articleList = $this->articleOpr->getArticlesByTypeIdLimit($_GET['categoryId'],$_GET['pageIndex'], $_POST['pageSize']);
+            }else{
+    		    // 按照分类id输出
+    		    $articleList = $this->articleOpr->getArticlesByTypeId($_GET['categoryId']);
+    	    }
+            if(!$articleList){
+                //$this->errReturn(TYPE_IS_NOT_EXIST, '分类Id不存在');
+                return $this->sucReturn("");
             }
         }
     	// 封装数据
@@ -82,13 +105,14 @@ class ArticleController extends Controller {
 				'coverUrl'       => 'http://i8.tietuku.com/1a055c782b5a4c37.png',
 				// 'authorImageUrl' => $value['author_image'],
 				'authorImageUrl' => 'http://i8.tietuku.com/1a055c782b5a4c37.png',
-				'submitData'     => date('Y-m-d H:i:s' , $value['updated_time']),
+				'submitDate'     => date('Y-m-d H:i:s' , $value['created_time']),
 				'title'          => $value['title'],
 				'articleUrl'     => "http://swift.gg/" . date('Y/m/d',$value['updated_time']) . '/' .$value['permalink'],//$value['content_url'],
 				'translator'     => $value['translator'],
 				'description'    => $value['description'],
                 'starsNumber'    => (int)$value['stars_number'],
-				'commentsNumber' => rand(0,80)
+				'commentsNumber' => rand(0,80),
+                'updateDate'     => $value['updated_time']
 			);
 			$data[$key] = $list;
 		}
@@ -100,4 +124,6 @@ class ArticleController extends Controller {
 		$this->errReturn('接口已废除');
     }
 }
+
+
 

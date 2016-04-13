@@ -29,4 +29,7 @@ define("UID_SPECIAL_CHARACTER",         -1112); //uid含有特殊字符串
 define("TYPES_IS_NULL",                 -1201); //注册时，nickName已经存在
 define('TYPE_IS_NOT_EXIST',             -1202); 
 define("CATEGORYID_SPECIAL_CHARACTER",  -1203); //categoryid含有特殊字符串
+define("PAGEINDEX_SPECIAL_CHARACTER",   -1204); //pageindex含有特殊字符串
+define("PAGESIZE_SPECIAL_CHARACTER",    -1205); //pagesize含有特殊字符串
+
 ?>
