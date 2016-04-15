@@ -3,6 +3,10 @@
 ### 版本历史
 
 ```
+V0.8：by CMB，2016-04-15
+
+* 新增 getAppInfo 接口
+
 V0.7：by CMB，2016-04-13
 
 * 修改为 restful，获取文章详细信息接口打开
@@ -34,8 +38,39 @@ V0.1：by CMB，2015-12-15
 
 ```
 
+v0.9: 待定
 
-v0.8: 待定
+### ModuleName:app
+
+#### getAppInfo（完成）
+
+使用场景：获取 app 参数
+
+地址：`GET` http://123.57.250.194/v1/app/info
+
+请求参数：
+
+```
+{
+
+}
+```
+
+注册成功响应参数：
+
+```
+{
+	"ret"  : 0,
+	"data" : {
+		"appVersion"        : app 版本号,
+		"articleVersion"    : 文章版本号,
+		"articleSum"        : 文章总数,
+		"categoriesVersion" : 分类列表版本号,
+		"message"           : 信息
+	}
+	"errMsg" : ""
+}
+```
 
 ### ModuleName: user
 
@@ -47,7 +82,7 @@ v0.8: 待定
 
 请求参数：
 
-``` 
+```
 {
 	"userName" : 用户名,
 	"password" : 加密后的密码
@@ -56,7 +91,7 @@ v0.8: 待定
 
 响应参数：
 
-``` 
+```
 {
 	"ret"  : 0,
 	"data" : {
@@ -69,7 +104,7 @@ v0.8: 待定
 
 错误情况：
 
-``` 
+```
 {
 	"ret"  : 错误码,
 	"errMsg" : 错误信息
@@ -85,7 +120,7 @@ v0.8: 待定
 
 请求参数：
 
-``` 
+```
 {
 	"keyseri" : 第三方唯一标识(必填),
 	"type"    : 第三方类型("qq"|"github"|"weibo",必填)
@@ -94,7 +129,7 @@ v0.8: 待定
 
 响应参数：
 
-``` 
+```
 {
 	"ret"  : 0,
 	"data" : {
@@ -107,7 +142,7 @@ v0.8: 待定
 
 错误情况：
 
-``` 
+```
 {
 	"ret"  : 错误码,
 	"errMsg" : 错误信息
@@ -122,7 +157,7 @@ v0.8: 待定
 
 请求参数：
 
-``` 
+```
 {
 	"userName" : 用户名,
 	"password" : 加密后的密码
@@ -131,7 +166,7 @@ v0.8: 待定
 
 注册成功响应参数：
 
-``` 
+```
 {
 	"ret"  : 0,
 	"data" : {
@@ -144,7 +179,7 @@ v0.8: 待定
 
 错误情况：
 
-``` 
+```
 {
 	"ret"  : 错误码,
 	"errMsg" : 错误信息
@@ -160,7 +195,7 @@ v0.8: 待定
 
 请求参数：
 
-``` 
+```
 {
 	"keyseri"   : 第三方唯一标识(必填)
 	"type"      : 第三方类型("qq"|"github"|"weibo",必填)
@@ -172,7 +207,7 @@ v0.8: 待定
 
 注册成功响应参数：
 
-``` 
+```
 {
 	"ret"  : 0,
 	"data" : {
@@ -185,7 +220,7 @@ v0.8: 待定
 
 错误情况：
 
-``` 
+```
 {
 	"ret"  : 错误码,
 	"errMsg" : 错误信息
@@ -200,7 +235,7 @@ v0.8: 待定
 
 请求参数：
 
-``` 
+```
 {
 	"uid" : 用户id(必填)
 }
@@ -208,7 +243,7 @@ v0.8: 待定
 
 响应参数：
 
-``` 
+```
 {
 	"ret"  : 0,
 	"data" : {
@@ -255,7 +290,7 @@ v0.8: 待定
 
 请求参数：
 
-``` 
+```
 {
 
 }
@@ -263,7 +298,7 @@ v0.8: 待定
 
 响应参数：
 
-``` 
+```
 {
 	"ret" : 0,
 	"data : [
@@ -285,15 +320,17 @@ v0.8: 待定
 
 请求参数：
 
-``` 
+```
 {
-	"categoryId" : 分类id(如果不输入就按时间输出文章列表,可选)
+	"categoryId" : 分类id(如果不输入就按时间输出文章列表,可选),
+	"pageIndex"  : 当前页(从1开始,可选),
+	"pageSize"   : 一页显示的数量(从1开始,可选)
 }
 ```
 
 响应参数：
 
-``` 
+```
 {
 	"ret"  : 0,
 	"data" : [
@@ -302,24 +339,26 @@ v0.8: 待定
 			"coverUrl"       : 封面图片URL,
 			"authorImageUrl" : 文章作者的头像Url,
 			"submitData"     : 文章提交时间,
-			"title"          : 文章标题, 
+			"title"          : 文章标题,
 			"articleUrl"     : 文章Url,
 			"translator"     : 翻译者名称,
 			"description"    : 文章描述,
 			"starsNumber"    : 文章点赞数,
-			"commentsNumber" : 评论数
+			"commentsNumber" : 评论数,
+			"updateDate"     : 更新时间
 		},
 		{
 			"id"             : 文章id,
 			"coverUrl"       : 封面图片URL,
 			"authorImageUrl" : 文章作者的头像Url,
 			"submitData"     : 文章提交时间,
-			"title"          : 文章标题, 
+			"title"          : 文章标题,
 			"articleUrl"     : 文章Url,
 			"translator"     : 翻译者名称,
 			"description"    : 文章描述,
 			"starsNumber"    : 文章点赞数,
-			"commentsNumber" : 评论数
+			"commentsNumber" : 评论数,
+			"updateDate"     : 更新时间
 		},
 		...
 	]
@@ -336,7 +375,7 @@ v0.8: 待定
 
 请求参数：
 
-``` 
+```
 {
 	"articleId" : 文章id(必填)
 }
@@ -344,13 +383,13 @@ v0.8: 待定
 
 响应参数：
 
-``` 
+```
 {
 	"ret"  : 0,
 	"data" : {
 		"typeId"         : 分类ID,
 		"typeName"       : 分类名称,
-		"tag"            : 标签,JSON格式,
+		"tags"           : 标签,JSON格式,
 		"coverUrl"       : 封面图片URL,
 		"contentUrl"     : 内容URL,
 		"translator"     : 翻译者名称,
