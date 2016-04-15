@@ -166,3 +166,4 @@
 2016-04-15 07:59:26 getArticlesByCategoryV1：{"categoryId":"1","pageIndex":"0","pageSize":"2"}
 2016-04-15 07:59:43 getDetailV1：{"aricleId":"1"}
 2016-04-15 07:59:57 getDetailV1：{"articleId":"1"}
+2016-04-15 17:05:13 getDetailV1：{"aricleId":"1"}

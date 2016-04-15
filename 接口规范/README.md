@@ -46,7 +46,7 @@ v0.9: 待定
 
 使用场景：获取 app 参数
 
-地址：`GET` http://123.57.250.194/v1/app/info
+地址：`GET` http://api.swift.gg/v1/app/info
 
 请求参数：
 
@@ -78,7 +78,7 @@ v0.9: 待定
 
 使用场景：用户密码登录
 
-地址：`POST` http://123.57.250.194/v1/user/userLogin
+地址：`POST` http://api.swift.gg/v1/user/userLogin
 
 请求参数：
 
@@ -116,7 +116,7 @@ v0.9: 待定
 
 使用场景：用户第三方登录
 
-地址：`POST` http://123.57.250.194/v1/user/otherLogin
+地址：`POST` http://api.swift.gg/v1/user/otherLogin
 
 请求参数：
 
@@ -153,7 +153,7 @@ v0.9: 待定
 
 使用场景：用户注册
 
-地址：`POST` http://123.57.250.194/v1/user/userRegister
+地址：`POST` http://api.swift.gg/v1/user/userRegister
 
 请求参数：
 
@@ -191,7 +191,7 @@ v0.9: 待定
 
 使用场景：用户第三方注册
 
-地址：`POST` http://123.57.250.194/v1/user/userOtherRegister
+地址：`POST` http://api.swift.gg/v1/user/userOtherRegister
 
 请求参数：
 
@@ -231,7 +231,7 @@ v0.9: 待定
 
 使用场景：获取用户详细信息
 
-地址：`GET` http://123.57.250.194/v1/user/info
+地址：`GET` http://api.swift.gg/v1/user/info
 
 请求参数：
 
@@ -285,7 +285,7 @@ v0.9: 待定
 
 使用场景：获取分类列表
 
-地址：`GET` http://123.57.250.194/v1/article/categoryList
+地址：`GET` http://api.swift.gg/v1/article/categoryList
 
 请求参数：
 
@@ -315,7 +315,7 @@ v0.9: 待定
 使用场景：点击对应的分类显示文章列表
 
 
-地址：`GET` http://123.57.250.194/v1/article
+地址：`GET` http://api.swift.gg/v1/article
 
 请求参数：
 
@@ -370,7 +370,7 @@ v0.9: 待定
 
 使用场景：获取文章详细信息
 
-地址：`GET` http://123.57.250.194/v1/article/detail
+地址：`GET` http://api.swift.gg/v1/article/detail
 
 请求参数：
 
