@@ -14,8 +14,8 @@ define("GAME_ERR_CONFIG_WRONG",         -1010); //配置不一致错误
 define("SERVER_MAINTENANCE",            -1011); //服务器维护中
 //用户模块
 define("NICKNAME_IS_EXIST",             -1101); //注册时，nickName已经存在
-define("USER_NOT_FOUND",		        -1102); //找不到的用户
-define("DUPLICATED_USER",		        -1103); //GC绑定用户时，出现2条记录
+define("USER_NOT_FOUND",		            -1102); //找不到的用户
+define("DUPLICATED_USER",		            -1103); //GC绑定用户时，出现2条记录
 define("REFRESHTOKEN_IS_NOT_EXIST",     -1104); //根据refreshToken生成新的accessToken时，没有找到refreshToken相关数据
 define("USERNAME_IS_EXIST",             -1105); //注册时，用户名已经存在
 define("USERNAME_SPECIAL_CHARACTER",    -1106); //帐号含有特殊字符串
@@ -27,9 +27,11 @@ define("PASSWORD_IS_ERROR",             -1111); //密码有误
 define("UID_SPECIAL_CHARACTER",         -1112); //uid含有特殊字符串
 //文章模块
 define("TYPES_IS_NULL",                 -1201); //注册时，nickName已经存在
-define('TYPE_IS_NOT_EXIST',             -1202); 
+define('TYPE_IS_NOT_EXIST',             -1202); //类型不存在
 define("CATEGORYID_SPECIAL_CHARACTER",  -1203); //categoryid含有特殊字符串
 define("PAGEINDEX_SPECIAL_CHARACTER",   -1204); //pageindex含有特殊字符串
 define("PAGESIZE_SPECIAL_CHARACTER",    -1205); //pagesize含有特殊字符串
+define("ARTICLEID_IS_NULL",             -1206); //aricleid为空
+define("ARTICLEID_SPECIAL_CHARACTER",   -1207); //aricleid含有特殊字符串
 
 ?>

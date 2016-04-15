@@ -8,10 +8,10 @@ class SGTypeModel {
     public $_dB = null; //数据库连接
     public function __construct()
     {
-        $this->init();      
+        $this->init();
     }
     public function init(){
-        
+
     }
     //清除错误信息
     public function _clearERR() {
@@ -19,7 +19,7 @@ class SGTypeModel {
         $this -> errMsg = '';
     }
     //连接数据库
-    public function _initDB() {       
+    public function _initDB() {
         $this -> _dB = Flight::connectMysqlDB();
         if(!$this-> _dB){
             $this -> errMsg = "db error";
@@ -52,8 +52,8 @@ class SGTypeModel {
             $value .= "'$val',";
         }
         $field  = substr( $field,0,-1);
-        $value  = substr( $value,0,-1); 
-        try{      
+        $value  = substr( $value,0,-1);
+        try{
             $sql    = "insert into $table($field) values($value)";
             $result = mysql_query($sql) or die('sql语句执行失败，错误信息是：' . mysql_error());
             $id     = mysql_insert_id();
@@ -175,5 +175,30 @@ class SGTypeModel {
         }
         return false;
     }
+
+    // 获取最新文章的提交时间
+    public function getLastCreatedTime(){
+        $this -> _clearERR();
+        if(!$this->_initDB())
+        {
+            $this-> _closeDB();
+            return false;
+        }
+        $table  = DB_TABLE_TYPE;
+
+        try{
+            $query  =  "SELECT * FROM " . $table . " order by created_time DESC";
+            $result =  mysql_query($query);
+            $rt     =  &mysql_fetch_array($result);
+        } catch (Exception $e) {
+            $this -> errCode = GAME_ERR_DB_EXEC;
+            $this -> errMsg = $e;
+            $this -> _closeDB();
+            return false;
+        }
+        $this -> _closeDB();
+        return $rt['created_time'];
+    }
+
 }
 ?>

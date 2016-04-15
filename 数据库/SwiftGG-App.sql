@@ -26,11 +26,11 @@ CREATE TABLE IF NOT EXISTS `sg_article`(
 	`content`        text          NOT NULL COMMENT '文章内容',
 	`stars_number`   int(11)       DEFAULT 0 COMMENT '点赞数',
 	`clicked_number` int(11)       DEFAULT 0 COMMENT '点击数',
-  	`created_time`   int(11)       NOT NULL COMMENT '创建时间',
-  	`updated_time`   int(11)       NOT NULL COMMENT '更新时间',
-  	PRIMARY KEY (`id`),
-  	KEY `title`   (`title`),
-  	KEY `author`  (`author`)
+  `created_time`   int(11)       NOT NULL COMMENT '创建时间',
+  `updated_time`   int(11)       NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `title`   (`title`),
+  KEY `author`  (`author`)
 )ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT='文章';
 
 /*文章分类中间表*/

@@ -51,8 +51,8 @@ class Controller {
         if(is_array($data)) return array_map(array(__CLASS__, __FUNCTION__), $data);
         else return stripslashes($data);
     }
-    
-    //连接mysql，已经不再需要，后面要去掉
+
+    //连接mysql
     public static function db($name = "db") {
         if(!isset(self::$_dbInstances[$name])) {
             $db_host = Flight::get("$name.host");
@@ -232,16 +232,16 @@ class Controller {
 
     //连接mongoDB数据库,直接返回已经选择了frontiers数据库的对象
     public static function connectMongoDB() {
-        
+
         $mongo_server   = Flight::get("mongo.server");
         $mongo_username = Flight::get("mongo.username");
         $mongo_password = Flight::get("mongo.password");
         $mongo_database = Flight::get("mongo.database");
-        
+
         $mongoConnectStr = sprintf("mongodb://%s:%s@%s",$mongo_username, $mongo_password, $mongo_server);
         self::$_mongoClient = new MongoClient($mongoConnectStr);
         $gameDB = self::$_mongoClient -> $mongo_database;
-        
+
         return $gameDB;
     }
 
@@ -273,7 +273,7 @@ class Controller {
         mysql_query("set names 'utf8'");
         return $mysqlDB;
     }
-    
+
     //关闭数据库连接
     public static function closeMysqlDB(){
         $mysqlDB = Flight::connectMysqlDB();
@@ -302,11 +302,11 @@ class Controller {
                 // 返回JSON数据格式到客户端 包含状态信息
                 header('Content-Type:application/json; charset=utf-8');
                 $handler  =   isset($_GET[C('VAR_JSONP_HANDLER')]) ? $_GET[C('VAR_JSONP_HANDLER')] : C('DEFAULT_JSONP_HANDLER');
-                exit($handler.'('.json_encode($data).');');  
+                exit($handler.'('.json_encode($data).');');
             case 'EVAL' :
                 // 返回可执行的js脚本
                 header('Content-Type:text/html; charset=utf-8');
-                exit($data);            
+                exit($data);
         }
     }
 
@@ -338,4 +338,3 @@ class Controller {
         file_put_contents($path, $txt, FILE_APPEND);
     }
 }
-

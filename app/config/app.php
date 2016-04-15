@@ -19,23 +19,24 @@ return array(
     "flight.models.path" => dirname(__DIR__)."/models",
     //"flight.views.path" => dirname(__DIR__)."/views",
     "flight.libs.path" => dirname(__DIR__)."/libs",
-    // "flight.uploads.path" => 
+    // "flight.uploads.path" =>
 
     //路由配置
     "flight.routes" => array(
         // V1.0接口规范
-        array("/v1/user/otherLogin" , "User:otherLoginV1"),
-        array("/v1/user/userRegister", "User:userRegisterV1"),
-        array("/v1/user/userLogin" , "User:userLoginV1"),
-        array("/v1/user/getInfo" , "User:getInfoV1"),
-        array("/v1/article/getCategoryList" , "Article:getCategoryListV1"),
-        array("/v1/article/getArticlesByCategory" , "Article:getArticlesByCategoryV1"),
-        array("/v1/article/getDetail" , "Article:getDetailV1"),
+        array("GET /v1/app/info" , "Main:getAppInfo"),
+        array("POST /v1/user/otherLogin" , "User:otherLoginV1"),
+        array("POST /v1/user/userRegister", "User:userRegisterV1"),
+        array("POST /v1/user/userLogin" , "User:userLoginV1"),
+        array("GET /v1/user/info" , "User:getInfoV1"),
+        array("GET /v1/article/categoryList" , "Article:getCategoryListV1"),
+        array("GET /v1/article" , "Article:getArticlesByCategoryV1"),
+        array("GET /v1/article/detail" , "Article:getDetailV1"),
         array("/v1/catch/newArticle" , "Catch:addNewArticle"),
         // 其它规则
         array("*", "Main:index"),
-    ), 
-    
+    ),
+
     //mysql配置
     "db.host" => "localhost",
     "db.port" => 3306,
@@ -43,7 +44,7 @@ return array(
     "db.pass" => "",
     "db.name" => "swiftggapp",
     "db.charset" => "utf8mb4_unicode_ci",
-    
+
     //"cache.path" => dirname(__DIR__)."/storage/cache",
     "log.path" => dirname(__DIR__)."/logs",
 
@@ -58,5 +59,3 @@ return array(
     "redis.port" => 6380,
 
 );
-
-
