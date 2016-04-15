@@ -137,27 +137,27 @@ class ArticleController extends Controller {
 					return $this->sucReturn("");
 				}
 				$data = array(
-					'id'             => (int)$article['id'],
-					'typeId'         => (int)$article['type_id'],
-					'typeName'       => $article['type_name'],
-					'tags'           => json_decode($article['tags']),
-					'coverUrl'       => 'http://swiftggapp.b0.upaiyun.com/appicon.png',
-					'contentUrl'     => "http://swift.gg/" . date('Y/m/d',$article['created_time']) . '/' .$article['permalink'],
-					'translator'     => $article['translator'],
-					'proofreader'    => $article['proofreader'],
-					'finalization'   => $article['finalization'],
-					'author'         => $article['author'],
-					'authorImageUrl' => 'http://swiftggapp.b0.upaiyun.com/appicon.png',
-					'originalDate'   => $article['original_date'],
-					'originalUrl'    => $article['original_url'],
-					'description'    => $article['description'],
-					'clickedNumber'  => (int)$article['clicked_number'],
-					'submitDate'     => date('Y-m-d H:i:s' , $article['created_time']),
-					'starsNumber'    => (int)$article['stars_number'],
-					'commentsNumber' => 0,
-					'content'        => $article['content'],
-					'comments'       => array(),
-	        'updateDate'     => $article['updated_time']
+					'id'                 => (int)$article['id'],
+					'typeId'             => (int)$article['type_id'],
+					'typeName'           => $article['type_name'],
+					'tags'               => json_decode($article['tags']),
+					'coverUrl'           => 'http://swiftggapp.b0.upaiyun.com/appicon.png',
+					'contentUrl'     		 => "http://swift.gg/" . date('Y/m/d',$article['created_time']) . '/' .$article['permalink'],
+					'translator'         => $article['translator'],
+					'proofreader'        => $article['proofreader'],
+					'finalization'       => $article['finalization'],
+					'author'             => $article['author'],
+					'authorImageUrl'     => 'http://swiftggapp.b0.upaiyun.com/appicon.png',
+					'originalDate'       => $article['original_date'],
+					'originalUrl'        => $article['original_url'],
+					'articleDescription' => $article['description'],
+					'clickedNumber'      => (int)$article['clicked_number'],
+					'submitDate'         => date('Y-m-d H:i:s' , $article['created_time']),
+					'starsNumber'        => (int)$article['stars_number'],
+					'commentsNumber'     => 0,
+					'content'            => $article['content'],
+					'comments'           => array(),
+	        'updateDate'         => $article['updated_time']
 				);
 				return $this->sucReturn($data);
 			}else{

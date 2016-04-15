@@ -9,9 +9,9 @@ The server side of official SwiftGG Application, written in PHP.
 
 ## Introduction
 
-The PHP version requires PHP `5.3` or greater, Because we use [Flightphp](http://flightphp.com/) framework( An extensible micro-framework for PHP).
+The PHP version requires PHP `5.3` or greater, Because we use [Flightphp](http://flightphp.com/) framework( An extensible micro-framework for PHP ).
 
-This project support running in all the platform.
+This project support running in all platforms.
 
 ## Installation
 
@@ -51,17 +51,15 @@ server {
 - [x] Login
 - [x] Register
 - [x] Info
-- [ ] login and registe use mobile and captcha, and return the token with expire time
+- [ ] login and register use mobile and captcha, and return the token with expire time
 
 ### Article
 - [x] CategoryList
 - [x] ArticleList
-- [ ] ArticleDetails
+- [x] ArticleDetails
 
 ## Interface
 Please refer to the interface [documentation](./接口规范/README.md).
 
 ## License
 SwiftGGAppServer is released under the MIT license.
-
-

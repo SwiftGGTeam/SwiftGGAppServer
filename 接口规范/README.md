@@ -281,7 +281,6 @@ v0.9: 待定
 
 ### ModuleName: article
 
-
 #### getCategoryList（已完成）
 
 使用场景：获取分类列表
@@ -345,7 +344,7 @@ v0.9: 待定
 			"description"    : 文章描述,
 			"starsNumber"    : 文章点赞数,
 			"commentsNumber" : 评论数,
-			"updateDate"     : 更新时间
+			"updateDate"     : 最后更新的时间
 		},
 		{
 			"id"             : 文章id,
@@ -358,7 +357,7 @@ v0.9: 待定
 			"description"    : 文章描述,
 			"starsNumber"    : 文章点赞数,
 			"commentsNumber" : 评论数,
-			"updateDate"     : 更新时间
+			"updateDate"     : 最后更新的时间
 		},
 		...
 	]
@@ -387,24 +386,24 @@ v0.9: 待定
 {
 	"ret"  : 0,
 	"data" : {
-		"typeId"         : 分类ID,
-		"typeName"       : 分类名称,
-		"tags"           : 标签,JSON格式,
-		"coverUrl"       : 封面图片URL,
-		"contentUrl"     : 内容URL,
-		"translator"     : 翻译者名称,
-		"proofreader"    : 校对者,
-		"finalization"   : 定稿者,
-		"author"         : 文章作者,
-		"authorImageUrl" : 文章作者的头像URL,
-		"originalDate"   : 原文发布日期,
-		"originalUrl"    : 原文链接,
-		"description"    : 文章描述,
-		"clickedNumber"  : 点击数,
-		"submitDate"     : 文章提交时间,
-		"starsNumber"    : 文章点赞数,
-		"commentsNumber" : 评论数,
-		"content"        : 内容,
+		"typeId"             : 分类ID,
+		"typeName"           : 分类名称,
+		"tags"               : 标签,JSON格式,
+		"coverUrl"           : 封面图片URL,
+		"contentUrl"         : 内容URL,
+		"translator"         : 翻译者名称,
+		"proofreader"        : 校对者,
+		"finalization"       : 定稿者,
+		"author"             : 文章作者,
+		"authorImageUrl"     : 文章作者的头像URL,
+		"originalDate"       : 原文发布日期,
+		"originalUrl"        : 原文链接,
+		"articleDescription" : 文章描述,
+		"clickedNumber"      : 点击数,
+		"submitDate"         : 文章提交时间,
+		"starsNumber"        : 文章点赞数,
+		"commentsNumber"     : 评论数,
+		"content"            : 内容,
 		"comments" : [
 			{ "name" : 评论者名称, "imageUrl" : 评论者头像URL, "dateTime" : 评论时间 },
 			{ "name" : 评论者名称, "imageUrl" : 评论者头像URL, "dateTime" : 评论时间 },
