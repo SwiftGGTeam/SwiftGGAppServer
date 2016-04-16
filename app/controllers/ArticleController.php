@@ -155,7 +155,7 @@ class ArticleController extends Controller {
 					'originalUrl'        => $article['original_url'],
 					'articleDescription' => $article['description'],
 					'clickedNumber'      => (int)$article['clicked_number'],
-					'submitDate'         => date('Y-m-d H:i:s' , $article['created_time']),
+					'submitDate'         => date(DATE_ISO8601, $value['created_time']),
 					'starsNumber'        => (int)$article['stars_number'],
 					'commentsNumber'     => 0,
 					'content'            => $article['content'],
