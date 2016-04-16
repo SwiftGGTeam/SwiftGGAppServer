@@ -72,6 +72,8 @@ v0.9: 待定
 }
 ```
 
+---
+
 ### ModuleName: user
 
 #### userLogin（完成）
@@ -110,7 +112,6 @@ v0.9: 待定
 	"errMsg" : 错误信息
 }
 ```
-
 
 #### otherLogin（未完成）
 
@@ -185,7 +186,6 @@ v0.9: 待定
 	"errMsg" : 错误信息
 }
 ```
-
 
 #### userOtherRegister（未完成）
 
@@ -278,10 +278,11 @@ v0.9: 待定
 }
 ```
 
+---
 
 ### ModuleName: article
 
-#### getCategoryList（已完成）
+#### getCategoryList（完成）
 
 使用场景：获取分类列表
 
@@ -308,9 +309,7 @@ v0.9: 待定
 }
 ```
 
----
-
-#### getArticlesByCategory（已完成）
+#### getArticlesByCategory（完成）
 
 使用场景：点击对应的分类显示文章列表
 
@@ -335,6 +334,8 @@ v0.9: 待定
 	"data" : [
 		{
 			"id"             : 文章id,
+			"typeId"         : 分类ID,
+			"typeName"       : 分类名称,
 			"coverUrl"       : 封面图片URL,
 			"authorImageUrl" : 文章作者的头像Url,
 			"submitData"     : 文章提交时间,
@@ -348,6 +349,8 @@ v0.9: 待定
 		},
 		{
 			"id"             : 文章id,
+			"typeId"         : 分类ID,
+			"typeName"       : 分类名称,
 			"coverUrl"       : 封面图片URL,
 			"authorImageUrl" : 文章作者的头像Url,
 			"submitData"     : 文章提交时间,
@@ -364,9 +367,7 @@ v0.9: 待定
 }
 ```
 
----
-
-#### getDetail（未完成）
+#### getDetail（完成）
 
 使用场景：获取文章详细信息
 
@@ -386,6 +387,7 @@ v0.9: 待定
 {
 	"ret"  : 0,
 	"data" : {
+		"id"                 : 文章ID,
 		"typeId"             : 分类ID,
 		"typeName"           : 分类名称,
 		"tags"               : 标签,JSON格式,

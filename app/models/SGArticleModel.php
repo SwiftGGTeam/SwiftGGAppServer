@@ -123,7 +123,7 @@ class SGArticleModel {
         $articleTypeTable = DB_TABLE_ARTICLE_TYPE;
         $typeTable        = DB_TABLE_TYPE;
         try{
-            $query  = "SELECT $articleTable.* FROM $articleTypeTable INNER JOIN $articleTable ON $articleTable.`id`=$articleTypeTable.`article_id` inner JOIN $typeTable ON $typeTable.`id`=$articleTypeTable.`type_id` WHERE $typeTable.`id`=$typeId ORDER BY `created_time` DESC";
+            $query  = "SELECT $articleTable.*,$typeTable.`id` as `type_id`,$typeTable.`name` as `type_name` FROM $articleTypeTable INNER JOIN $articleTable ON $articleTable.`id`=$articleTypeTable.`article_id` inner JOIN $typeTable ON $typeTable.`id`=$articleTypeTable.`type_id` WHERE $typeTable.`id`=$typeId ORDER BY `created_time` DESC";
             $result = mysql_query($query);
             $rt     = array();
             $i      = 0;
@@ -157,7 +157,7 @@ class SGArticleModel {
         $articleTypeTable = DB_TABLE_ARTICLE_TYPE;
         $typeTable        = DB_TABLE_TYPE;
         try{
-            $query  = "SELECT $articleTable.* FROM $articleTypeTable INNER JOIN $articleTable ON $articleTable.`id`=$articleTypeTable.`article_id` inner JOIN $typeTable ON $typeTable.`id`=$articleTypeTable.`type_id` WHERE $typeTable.`id`=$typeId ORDER BY `created_time` DESC LIMIT " . ($pageIndex-1) * $pageSize . "," . $pageSize;
+            $query  = "SELECT $articleTable.*,$typeTable.`id` as `type_id`,$typeTable.`name` as `type_name` FROM $articleTypeTable INNER JOIN $articleTable ON $articleTable.`id`=$articleTypeTable.`article_id` inner JOIN $typeTable ON $typeTable.`id`=$articleTypeTable.`type_id` WHERE $typeTable.`id`=$typeId ORDER BY `created_time` DESC LIMIT " . ($pageIndex-1) * $pageSize . "," . $pageSize;
             $result = mysql_query($query);
             $rt     = array();
             $i      = 0;
@@ -183,9 +183,11 @@ class SGArticleModel {
             $this-> _closeDB();
             return false;
         }
-        $table  = DB_TABLE_ARTICLE;
+        $articleTable     = DB_TABLE_ARTICLE;
+        $articleTypeTable = DB_TABLE_ARTICLE_TYPE;
+        $typeTable        = DB_TABLE_TYPE;
         try{
-            $query  = "SELECT * FROM " . $table . " order by created_time DESC";
+            $query  = "SELECT $articleTable.*,$typeTable.`id` as `type_id`,$typeTable.`name` as `type_name` FROM $articleTypeTable INNER JOIN $articleTable ON $articleTable.`id`=$articleTypeTable.`article_id` inner JOIN $typeTable ON $typeTable.`id`=$articleTypeTable.`type_id` ORDER BY `created_time` DESC";
             $result = mysql_query($query);
             $rt     = array();
             $i      = 0;
@@ -211,9 +213,11 @@ class SGArticleModel {
             $this-> _closeDB();
             return false;
         }
-        $table  = DB_TABLE_ARTICLE;
+        $articleTable     = DB_TABLE_ARTICLE;
+        $articleTypeTable = DB_TABLE_ARTICLE_TYPE;
+        $typeTable        = DB_TABLE_TYPE;
         try{
-            $query  = "SELECT * FROM " . $table . " order by created_time DESC LIMIT " . ($pageIndex-1) * $pageSize . "," . $pageSize;
+            $query  = "SELECT $articleTable.*,$typeTable.`id` as `type_id`,$typeTable.`name` as `type_name` FROM $articleTypeTable INNER JOIN $articleTable ON $articleTable.`id`=$articleTypeTable.`article_id` inner JOIN $typeTable ON $typeTable.`id`=$articleTypeTable.`type_id` ORDER BY `created_time` DESC LIMIT " . ($pageIndex-1) * $pageSize . "," . $pageSize;
             $result = mysql_query($query);
             $rt     = array();
             $i      = 0;

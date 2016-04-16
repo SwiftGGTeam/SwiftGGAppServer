@@ -100,22 +100,25 @@ class ArticleController extends Controller {
             return $this->sucReturn("");
         }
       }
+			//ToolUtil::p($articleList);die;
     	// 封装数据
     	foreach ($articleList as $key => $value) {
 				$list = array(
-					'id'             => (int)$value['id'],
-					// 'coverUrl'       => $value['cover_url'],
-					'coverUrl'       => 'http://swiftggapp.b0.upaiyun.com/appicon.png',
-					// 'authorImageUrl' => $value['author_image'],
-					'authorImageUrl' => 'http://swiftggapp.b0.upaiyun.com/appicon.png',
-					'submitDate'     => date('Y-m-d H:i:s' , $value['created_time']),
-					'title'          => $value['title'],
-					'articleUrl'     => "http://swift.gg/" . date('Y/m/d',$value['updated_time']) . '/' .$value['permalink'],//$value['content_url'],
-					'translator'     => $value['translator'],
-					'description'    => $value['description'],
-	        'starsNumber'    => (int)$value['stars_number'],
-					'commentsNumber' => 0,
-	        'updateDate'     => $value['updated_time']
+					'id'                 => (int)$value['id'],
+					'typeId'             => (int)$value['type_id'],
+					'typeName'           => $value['type_name'],
+					// 'coverUrl'        => $value['cover_url'],
+					'coverUrl'           => 'http://swiftggapp.b0.upaiyun.com/appicon.png',
+					// 'authorImageUrl'  => $value['author_image'],
+					'authorImageUrl'     => 'http://swiftggapp.b0.upaiyun.com/appicon.png',
+					'submitDate'         => date(DATE_ISO8601, $value['created_time']),
+					'title'              => $value['title'],
+					'contentUrl'         => "http://swift.gg/" . date('Y/m/d',$value['updated_time']) . '/' .$value['permalink'],//$value['content_url'],
+					'translator'         => $value['translator'],
+					'articleDescription' => $value['description'],
+	        'starsNumber'        => (int)$value['stars_number'],
+					'commentsNumber'     => 0,
+	        'updateDate'         => $value['updated_time']
 				);
 				$data[$key] = $list;
 			}
